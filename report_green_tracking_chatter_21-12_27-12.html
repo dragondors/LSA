@@ -1,0 +1,634 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <title>Green Tracking por Chatter · Report 21-12 al 27-12</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <style>
+    :root {
+      --bg:#020617;--bg-card:#0b1120;--text:#e5e7eb;--muted:#9ca3af;
+      --accent:#22c55e;--pos:#22c55e;--neg:#ef4444;--border:#1f2937;
+    }
+    *{box-sizing:border-box;font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;}
+    body{margin:0;background:radial-gradient(circle at top,#1f2937 0,var(--bg) 50%,#000 100%);color:var(--text);}
+    .wrap{max-width:1100px;margin:0 auto;padding:24px 16px 40px;}
+    header{display:flex;flex-wrap:wrap;justify-content:space-between;gap:8px;margin-bottom:20px;}
+    h1{margin:0;font-size:1.6rem;}
+    .subtitle{margin:4px 0 0;color:var(--muted);font-size:.9rem;}
+    .range{font-size:.85rem;color:var(--accent);margin-top:4px;}
+    .badge{align-self:flex-start;border-radius:999px;border:1px solid rgba(34,197,94,.3);padding:6px 10px;font-size:.75rem;color:var(--accent);display:inline-flex;align-items:center;gap:6px;background:rgba(15,23,42,.9);}
+    .dot{width:7px;height:7px;border-radius:999px;background:var(--accent);box-shadow:0 0 10px var(--accent);}
+    .grid{display:grid;grid-template-columns:minmax(0,1.8fr) minmax(0,1.7fr);gap:16px;margin-bottom:20px;}
+    @media(max-width:900px){.grid{grid-template-columns:minmax(0,1fr);}}
+    .card{background:var(--bg-card);border-radius:16px;border:1px solid var(--border);padding:14px 16px;}
+    .card h2{margin:0 0 6px;font-size:1rem;}
+    .card p{margin:0 0 10px;font-size:.8rem;color:var(--muted);}
+    .kpi{font-size:1.4rem;font-weight:600;margin-bottom:2px;}
+    .small{font-size:.8rem;color:var(--muted);}
+    label{font-size:.8rem;color:var(--muted);display:block;margin-bottom:4px;}
+    select{width:100%;padding:7px 9px;border-radius:10px;border:1px solid var(--border);background:#020617;color:var(--text);}
+    .chart-box{height:260px;}
+    .table-wrap{border-radius:16px;border:1px solid var(--border);overflow:hidden;background:rgba(15,23,42,.95);}
+    table{width:100%;border-collapse:collapse;font-size:.8rem;}
+    th,td{padding:8px 10px;text-align:left;}
+    thead{background:linear-gradient(to right,#020617,#0f172a);}
+    th{color:var(--muted);font-weight:600;border-bottom:1px solid var(--border);}
+    tbody tr:nth-child(even){background:rgba(15,23,42,.7);}
+    tbody tr:nth-child(odd){background:rgba(15,23,42,.45);}
+    td{border-bottom:1px solid rgba(31,41,55,.7);}
+    .pos{color:var(--pos);font-weight:600;}
+    .neg{color:var(--neg);font-weight:600;}
+  </style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <div>
+      <h1>Green Tracking por Chatter</h1>
+      <p class="subtitle">Profit distribuido por modelo para cada chatter.</p>
+      <p class="range">Report 21-12 al 27-12</p>
+    </div>
+    <div class="badge"><span class="dot"></span>LSCC · Weekly Performance</div>
+  </header>
+
+  <section class="grid">
+    <div class="card">
+      <h2>Resumen del chatter</h2>
+      <p>Selecciona un chatter para ver en qué modelos está generando más (o menos) profit.</p>
+      <div class="kpi" id="kpiTotal">0,00</div>
+      <div class="small" id="kpiLabel">Total profit del chatter seleccionado</div>
+      <div style="margin-top:10px;">
+        <label for="chatterSelect">Chatter</label>
+        <select id="chatterSelect"></select>
+      </div>
+    </div>
+    <div class="card">
+      <h2>Gráfica por modelo</h2>
+      <p>Profit por modelo del chatter seleccionado. Verde = positivo, rojo = negativo.</p>
+      <div class="chart-box"><canvas id="chart"></canvas></div>
+    </div>
+  </section>
+
+  <section class="card" style="margin-bottom:8px;">
+    <h2>Detalle por modelo</h2>
+    <p>Listado de modelos con su profit correspondiente para el chatter.</p>
+  </section>
+
+  <section class="table-wrap">
+    <table>
+      <thead>
+        <tr>
+          <th>Modelo</th>
+          <th>Profit</th>
+        </tr>
+      </thead>
+      <tbody id="tbody"></tbody>
+    </table>
+  </section>
+</div>
+
+<script>
+// Data base: modelo -> [{chatter, profit}] (datos corregidos)
+const modelChatterData = {
+  "M12": [
+    {
+      "chatter": "Marcelo",
+      "profit": 217.28
+    },
+    {
+      "chatter": "Laleska",
+      "profit": 94.64
+    },
+    {
+      "chatter": "Roger",
+      "profit": 343.85
+    },
+    {
+      "chatter": "Gabriel A",
+      "profit": 14.23
+    },
+    {
+      "chatter": "Jonathan",
+      "profit": 79.06
+    }
+  ],
+  "M38": [
+    {
+      "chatter": "Marcelo",
+      "profit": 119.71
+    },
+    {
+      "chatter": "Laleska",
+      "profit": -7.75
+    },
+    {
+      "chatter": "Jesús V",
+      "profit": -58.6
+    },
+    {
+      "chatter": "Roger",
+      "profit": -49.54
+    }
+  ],
+  "M9": [
+    {
+      "chatter": "Ubeku",
+      "profit": -32.85
+    },
+    {
+      "chatter": "Moses",
+      "profit": -42.21
+    },
+    {
+      "chatter": "Leo",
+      "profit": 11.95
+    }
+  ],
+  "M22": [
+    {
+      "chatter": "Ubeku",
+      "profit": -69.69
+    },
+    {
+      "chatter": "Moses",
+      "profit": 117.57
+    },
+    {
+      "chatter": "Leo",
+      "profit": 107.12
+    }
+  ],
+  "M14": [
+    {
+      "chatter": "Jerry",
+      "profit": 960.13
+    },
+    {
+      "chatter": "Samuel",
+      "profit": 360.65
+    },
+    {
+      "chatter": "Jason",
+      "profit": 962.99
+    }
+  ],
+  "M16": [
+    {
+      "chatter": "Jerry",
+      "profit": -77.27
+    },
+    {
+      "chatter": "Jason",
+      "profit": -67.17
+    }
+  ],
+  "M3": [
+    {
+      "chatter": "Paul",
+      "profit": 120.27
+    },
+    {
+      "chatter": "Victoria",
+      "profit": 481.12
+    },
+    {
+      "chatter": "Frank",
+      "profit": 229.22
+    }
+  ],
+  "M40": [
+    {
+      "chatter": "Paul",
+      "profit": 8.91
+    },
+    {
+      "chatter": "Victoria",
+      "profit": 49.97
+    },
+    {
+      "chatter": "Frank",
+      "profit": -44.14
+    }
+  ],
+  "M7": [
+    {
+      "chatter": "Paul",
+      "profit": -92.95
+    },
+    {
+      "chatter": "John E",
+      "profit": -47.52
+    },
+    {
+      "chatter": "Alfredo",
+      "profit": 7.57
+    },
+    {
+      "chatter": "Goodnews",
+      "profit": 197.77
+    }
+  ],
+  "M1": [
+    {
+      "chatter": "Paul",
+      "profit": 39.71
+    },
+    {
+      "chatter": "Aprihl",
+      "profit": 398.76
+    },
+    {
+      "chatter": "Mark",
+      "profit": 394.75
+    },
+    {
+      "chatter": "Precious",
+      "profit": 298.22
+    }
+  ],
+  "M5": [
+    {
+      "chatter": "Aprihl",
+      "profit": 17.16
+    },
+    {
+      "chatter": "Precious",
+      "profit": -5.38
+    }
+  ],
+  "M19": [
+    {
+      "chatter": "Aprihl",
+      "profit": -25.64
+    },
+    {
+      "chatter": "Mark",
+      "profit": 28.48
+    },
+    {
+      "chatter": "Precious",
+      "profit": 6.22
+    }
+  ],
+  "M25": [
+    {
+      "chatter": "Aprihl",
+      "profit": -5.56
+    },
+    {
+      "chatter": "Mark",
+      "profit": 7.76
+    },
+    {
+      "chatter": "Precious",
+      "profit": 1.42
+    }
+  ],
+  "M45": [
+    {
+      "chatter": "Aprihl",
+      "profit": -79.58
+    },
+    {
+      "chatter": "John E",
+      "profit": 210.2
+    },
+    {
+      "chatter": "Alfredo",
+      "profit": -9.8
+    },
+    {
+      "chatter": "Goodnews",
+      "profit": 164.51
+    },
+    {
+      "chatter": "Precious",
+      "profit": -72.11
+    }
+  ],
+  "M2": [
+    {
+      "chatter": "Cheemah",
+      "profit": 256.26
+    },
+    {
+      "chatter": "Nelson",
+      "profit": 248.74
+    },
+    {
+      "chatter": "Chidi",
+      "profit": 346.88
+    }
+  ],
+  "M36": [
+    {
+      "chatter": "Cheemah",
+      "profit": -31.15
+    },
+    {
+      "chatter": "Nelson",
+      "profit": -34.65
+    },
+    {
+      "chatter": "Chidi",
+      "profit": 61.87
+    }
+  ],
+  "M4": [
+    {
+      "chatter": "Maria A",
+      "profit": 115.28
+    },
+    {
+      "chatter": "Andreina",
+      "profit": 158.17
+    },
+    {
+      "chatter": "Aarón B.",
+      "profit": 185.56
+    },
+    {
+      "chatter": "Luis O",
+      "profit": 125.49
+    },
+    {
+      "chatter": "Alesandro",
+      "profit": 183.66
+    }
+  ],
+  "M13": [
+    {
+      "chatter": "Maria A",
+      "profit": -11.11
+    },
+    {
+      "chatter": "Jhoanna",
+      "profit": 23.03
+    },
+    {
+      "chatter": "Grisell",
+      "profit": 220.65
+    }
+  ],
+  "M33": [
+    {
+      "chatter": "Jhoanna",
+      "profit": -6.48
+    },
+    {
+      "chatter": "Jeremit",
+      "profit": -16.43
+    },
+    {
+      "chatter": "Grisell",
+      "profit": -37.74
+    }
+  ],
+  "M21": [
+    {
+      "chatter": "María V",
+      "profit": 12.5
+    },
+    {
+      "chatter": "Santiago",
+      "profit": 4.79
+    },
+    {
+      "chatter": "Jeremit",
+      "profit": 12.96
+    }
+  ],
+  "M34": [
+    {
+      "chatter": "María V",
+      "profit": 208.23
+    },
+    {
+      "chatter": "Santiago",
+      "profit": 61.49
+    },
+    {
+      "chatter": "Jeremit",
+      "profit": 22.71
+    }
+  ],
+  "M24": [
+    {
+      "chatter": "María V",
+      "profit": -27.63
+    },
+    {
+      "chatter": "Karelys",
+      "profit": 240.52
+    },
+    {
+      "chatter": "Barbara",
+      "profit": 331.39
+    },
+    {
+      "chatter": "Maria B",
+      "profit": 106.98
+    },
+    {
+      "chatter": "Silvio S",
+      "profit": 256.86
+    }
+  ],
+  "M43": [
+    {
+      "chatter": "Jesús V",
+      "profit": 303.71
+    },
+    {
+      "chatter": "Diego",
+      "profit": 108.2
+    },
+    {
+      "chatter": "David C.",
+      "profit": 211.84
+    }
+  ],
+  "M28": [
+    {
+      "chatter": "Jesús V",
+      "profit": 123.64
+    },
+    {
+      "chatter": "Diego",
+      "profit": 45.67
+    },
+    {
+      "chatter": "David C.",
+      "profit": 182.1
+    }
+  ],
+  "M11": [
+    {
+      "chatter": "Karelys",
+      "profit": -58.3
+    },
+    {
+      "chatter": "Jonathan",
+      "profit": -9.78
+    },
+    {
+      "chatter": "Grisell",
+      "profit": 8.78
+    }
+  ],
+  "M10": [
+    {
+      "chatter": "Eduardo A",
+      "profit": 4.17
+    },
+    {
+      "chatter": "Mariangel",
+      "profit": 49.9
+    },
+    {
+      "chatter": "José A.",
+      "profit": 184.62
+    },
+    {
+      "chatter": "Alesandro",
+      "profit": 0.24
+    }
+  ],
+  "M23": [
+    {
+      "chatter": "Eduardo A",
+      "profit": -11.74
+    },
+    {
+      "chatter": "Mariangel",
+      "profit": -35.73
+    },
+    {
+      "chatter": "José A.",
+      "profit": 4.91
+    }
+  ],
+  "M8": [
+    {
+      "chatter": "Maria B",
+      "profit": 216.54
+    },
+    {
+      "chatter": "Javier C",
+      "profit": 32.43
+    },
+    {
+      "chatter": "Neimar",
+      "profit": 190.1
+    }
+  ],
+  "M17": [
+    {
+      "chatter": "Maria B",
+      "profit": -33.01
+    },
+    {
+      "chatter": "Javier C",
+      "profit": 4
+    },
+    {
+      "chatter": "Neimar",
+      "profit": 59.09
+    }
+  ],
+  "M26": [
+    {
+      "chatter": "Javier C",
+      "profit": 83
+    },
+    {
+      "chatter": "Neimar",
+      "profit": 10.69
+    }
+  ]
+};
+// Invertimos: chatter -> [{model, profit}]
+const chatterModelData = {};
+for(const [model, rows] of Object.entries(modelChatterData)){
+  rows.forEach(r=>{
+    if(!chatterModelData[r.chatter]) chatterModelData[r.chatter]=[];
+    chatterModelData[r.chatter].push({model, profit:r.profit});
+  });
+}
+
+const chatterSelect = document.getElementById('chatterSelect');
+const tbody = document.getElementById('tbody');
+const kpiTotal = document.getElementById('kpiTotal');
+let chart = null;
+
+function formatES(v){return v.toLocaleString('es-ES',{minimumFractionDigits:2,maximumFractionDigits:2});}
+
+// llenar select
+const chatterNames = Object.keys(chatterModelData).sort((a,b)=>a.localeCompare(b,'es',{sensitivity:'base'}));
+chatterNames.forEach(name=>{
+  const opt = document.createElement('option');
+  opt.value = name;
+  opt.textContent = name;
+  chatterSelect.appendChild(opt);
+});
+
+function renderChatter(name){
+  const data = chatterModelData[name] || [];
+  tbody.innerHTML = "";
+  let total = 0;
+  data.sort((a,b)=>{
+    const na = parseInt(a.model.replace(/D/g,'')) || 0;
+    const nb = parseInt(b.model.replace(/D/g,'')) || 0;
+    return na-nb;
+  });
+  data.forEach(row=>{
+    total += row.profit;
+    const tr = document.createElement('tr');
+    const tdM = document.createElement('td');
+    const tdP = document.createElement('td');
+    tdM.textContent = row.model;
+    tdP.textContent = formatES(row.profit);
+    tdP.className = row.profit>=0 ? 'pos' : 'neg';
+    tr.appendChild(tdM);
+    tr.appendChild(tdP);
+    tbody.appendChild(tr);
+  });
+  kpiTotal.textContent = formatES(total);
+
+  const labels = data.map(r=>r.model);
+  const values = data.map(r=>r.profit);
+  const bg = values.map(v=>v>=0?'rgba(34,197,94,0.6)':'rgba(239,68,68,0.85)');
+  const border = values.map(v=>v>=0?'rgba(34,197,94,1)':'rgba(239,68,68,1)');
+
+  if(!chart){
+    const ctx = document.getElementById('chart').getContext('2d');
+    chart = new Chart(ctx,{
+      type:'bar',
+      data:{labels,datasets:[{data:values,backgroundColor:bg,borderColor:border,borderWidth:1.4,borderRadius:5}]},
+      options:{
+        plugins:{legend:{display:false}},
+        scales:{
+          x:{ticks:{color:'#9ca3af'},grid:{display:false}},
+          y:{ticks:{color:'#9ca3af',callback:(v)=>formatES(v)},grid:{color:'rgba(55,65,81,.5)'}}
+        }
+      }
+    });
+  }else{
+    chart.data.labels = labels;
+    chart.data.datasets[0].data = values;
+    chart.data.datasets[0].backgroundColor = bg;
+    chart.data.datasets[0].borderColor = border;
+    chart.update();
+  }
+}
+
+chatterSelect.addEventListener('change',e=>renderChatter(e.target.value));
+
+if(chatterNames.length){
+  chatterSelect.value = chatterNames[0];
+  renderChatter(chatterNames[0]);
+}
+</script>
+</body>
+</html>
