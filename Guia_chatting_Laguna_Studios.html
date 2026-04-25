@@ -1,0 +1,1403 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Academia Laguna Studios | Dashboard Interactivo</title>
+<style>
+:root{
+  --bg:#080c13;
+  --bg2:#0d1420;
+  --panel:#111827;
+  --panel2:#172133;
+  --panel3:#1e293b;
+  --text:#eef4ff;
+  --muted:#aab6c9;
+  --accent:#89a4be;
+  --accent2:#9ec5fe;
+  --gold:#f7c948;
+  --green:#38d976;
+  --yellow:#fbbf24;
+  --red:#fb7185;
+  --purple:#c084fc;
+  --blue:#60a5fa;
+  --line:#2d3a50;
+  --shadow:0 24px 70px rgba(0,0,0,.33);
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{
+  margin:0;
+  font-family:Segoe UI,Arial,sans-serif;
+  background:
+    radial-gradient(circle at top left,rgba(137,164,190,.18),transparent 34%),
+    radial-gradient(circle at 75% 15%,rgba(247,201,72,.10),transparent 28%),
+    linear-gradient(135deg,var(--bg),var(--bg2));
+  color:var(--text);
+}
+a{color:inherit}
+.layout{display:grid;grid-template-columns:350px 1fr;min-height:100vh}
+.sidebar{
+  position:sticky;top:0;height:100vh;overflow:auto;
+  background:rgba(13,20,32,.95);
+  backdrop-filter:blur(18px);
+  border-right:1px solid var(--line);
+  padding:22px 18px;
+}
+.logo{
+  display:flex;align-items:center;gap:12px;margin-bottom:10px
+}
+.logoMark{
+  width:42px;height:42px;border-radius:14px;
+  background:linear-gradient(135deg,var(--accent),var(--gold));
+  display:grid;place-items:center;color:#09111f;font-weight:1000;
+  box-shadow:0 12px 35px rgba(137,164,190,.28)
+}
+.brand{font-weight:1000;font-size:20px;line-height:1.1}
+.sub{font-size:12.5px;color:var(--muted);line-height:1.45;margin:8px 0 16px}
+.searchWrap{position:relative;margin-bottom:12px}
+.search{
+  width:100%;padding:12px 14px 12px 38px;
+  border:1px solid #334155;border-radius:14px;
+  background:#0a1220;color:var(--text);outline:none;
+}
+.searchIcon{position:absolute;left:13px;top:11px;color:var(--muted)}
+.progressBox{
+  background:linear-gradient(135deg,rgba(137,164,190,.12),rgba(247,201,72,.07));
+  border:1px solid #334155;border-radius:16px;padding:12px;margin:12px 0
+}
+.progressText{display:flex;justify-content:space-between;font-size:12px;color:var(--muted);margin-bottom:8px}
+.progressBar{height:8px;background:#0a1220;border-radius:999px;overflow:hidden}
+.progressFill{height:100%;width:0%;background:linear-gradient(90deg,var(--accent),var(--gold));transition:.3s}
+.chips{display:flex;flex-wrap:wrap;gap:7px;margin:12px 0}
+.chips button,.miniBtn{
+  border:1px solid #344154;background:#132036;color:#eaf1ff;
+  padding:8px 10px;border-radius:999px;font-size:12px;cursor:pointer;
+  transition:.18s;
+}
+.chips button:hover,.chips button.active,.miniBtn:hover{background:var(--accent);color:#07101f;border-color:var(--accent)}
+.navTitle{font-size:11px;letter-spacing:.11em;text-transform:uppercase;color:#7f8aa0;margin:16px 0 8px}
+nav a{
+  display:flex;gap:10px;align-items:flex-start;text-decoration:none;
+  color:#cbd5e1;padding:8px 10px;border-radius:12px;font-size:13px;line-height:1.25;
+  border:1px solid transparent;
+}
+nav a:hover{background:#172133;border-color:#2d3a50;color:white}
+nav a.active{background:linear-gradient(135deg,rgba(137,164,190,.18),rgba(247,201,72,.08));border-color:#45617e;color:#fff}
+nav span{color:var(--gold);font-weight:900;min-width:24px}
+main{padding:34px;max-width:1350px;width:100%}
+.hero{
+  position:relative;overflow:hidden;
+  background:linear-gradient(135deg,#172133,#0d1420);
+  border:1px solid #35445b;border-radius:30px;padding:34px;
+  box-shadow:var(--shadow);margin-bottom:24px
+}
+.hero:before{
+  content:"";position:absolute;right:-130px;top:-130px;width:330px;height:330px;
+  background:radial-gradient(circle,rgba(247,201,72,.18),transparent 68%);
+}
+.kicker{color:var(--gold);font-weight:900;letter-spacing:.12em;text-transform:uppercase;font-size:12px}
+.hero h1{font-size:43px;line-height:1.05;margin:10px 0 12px;max-width:920px}
+.hero p{color:#dbeafe;max-width:960px;line-height:1.65}
+.heroActions{display:flex;flex-wrap:wrap;gap:10px;margin-top:18px}
+.btn{
+  border:1px solid #42536d;background:#172133;color:white;padding:11px 14px;border-radius:14px;
+  cursor:pointer;text-decoration:none;display:inline-flex;align-items:center;gap:8px;font-weight:800;
+}
+.btn.primary{background:linear-gradient(135deg,var(--accent),#57718d);border-color:var(--accent);color:#08111f}
+.btn.gold{background:linear-gradient(135deg,var(--gold),#e1a918);border-color:var(--gold);color:#181102}
+.kpiGrid{display:grid;grid-template-columns:repeat(4,minmax(160px,1fr));gap:14px;margin:20px 0}
+.kpi{
+  background:rgba(17,24,39,.82);border:1px solid #324056;border-radius:18px;padding:16px;
+}
+.kpi .num{font-size:28px;font-weight:1000;color:#fff}
+.kpi .lbl{color:var(--muted);font-size:12px;margin-top:3px}
+.module{
+  background:rgba(17,24,39,.88);border:1px solid #2d3a50;border-radius:24px;
+  padding:26px;margin:22px 0;box-shadow:0 14px 38px rgba(0,0,0,.22);
+  scroll-margin-top:20px
+}
+.moduleHeader{display:flex;justify-content:space-between;gap:16px;align-items:flex-start;margin-bottom:12px}
+.module h2{font-size:28px;margin:0 0 8px}
+.module h3{font-size:20px;margin:22px 0 10px;color:#fff}
+.objective{
+  background:rgba(137,164,190,.12);border-left:4px solid var(--accent);
+  padding:12px 14px;border-radius:12px;color:#dcecff;line-height:1.55;margin:12px 0;
+}
+p,li{color:#d7dfed;line-height:1.65}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:14px}
+.card{
+  background:#0d1420;border:1px solid #344154;border-radius:18px;padding:16px;
+  transition:.2s;position:relative;overflow:hidden;
+}
+.card:hover{transform:translateY(-2px);border-color:#506987}
+.card h4{margin:0 0 8px;color:#fff}
+.card p{margin:0;color:#cbd5e1}
+.badge{display:inline-flex;align-items:center;gap:6px;padding:5px 9px;border-radius:999px;background:#233044;color:#fff;font-size:12px;font-weight:800;margin:4px 5px 4px 0}
+.badge.green{background:rgba(56,217,118,.15);color:#b8ffd2;border:1px solid rgba(56,217,118,.3)}
+.badge.yellow{background:rgba(251,191,36,.14);color:#ffe6a2;border:1px solid rgba(251,191,36,.3)}
+.badge.red{background:rgba(251,113,133,.14);color:#ffd0d8;border:1px solid rgba(251,113,133,.3)}
+.badge.purple{background:rgba(192,132,252,.14);color:#ead7ff;border:1px solid rgba(192,132,252,.3)}
+.tableWrap{overflow:auto;border:1px solid #344154;border-radius:16px;margin:14px 0}
+table{width:100%;border-collapse:collapse;background:#0d1420}
+th{background:#1c2a3f;color:#fff;padding:12px;text-align:left;vertical-align:top;font-size:13px}
+td{padding:11px 12px;border-top:1px solid #28364b;color:#e5ecf7;vertical-align:top;font-size:13px}
+tr:nth-child(even) td{background:#111a2b}
+.scriptCard{
+  background:#0c1322;border:1px solid #344154;border-left:5px solid var(--gold);
+  border-radius:18px;padding:14px;margin:14px 0;
+}
+.scriptCard[data-tag*="verde"]{border-left-color:var(--green)}
+.scriptCard[data-tag*="amarillo"]{border-left-color:var(--yellow)}
+.scriptCard[data-tag*="rojo"]{border-left-color:var(--red)}
+.scriptCard[data-tag*="whale"]{border-left-color:var(--purple)}
+.scriptCard[data-tag*="novia"]{border-left-color:var(--blue)}
+.scriptTitle{font-weight:1000;color:#fff;margin-bottom:8px;display:flex;justify-content:space-between;gap:10px}
+.scriptLine{
+  font-family:Consolas,monospace;background:#111a2b;border:1px solid #28364b;border-radius:12px;
+  padding:10px;color:#f8fbff;margin:7px 0;position:relative;
+}
+.copyBtn{
+  float:right;margin-left:10px;border:1px solid #3d4d65;background:#172133;color:#dbeafe;
+  border-radius:8px;padding:3px 7px;font-size:11px;cursor:pointer
+}
+.copyBtn:hover{background:#263650}
+.note,.warning,.success{
+  border-radius:16px;padding:14px;margin:14px 0;line-height:1.55
+}
+.note{background:rgba(96,165,250,.09);border:1px solid rgba(96,165,250,.32);color:#dbeafe}
+.success{background:rgba(56,217,118,.08);border:1px solid rgba(56,217,118,.30);color:#d1fae5}
+.warning{background:rgba(251,113,133,.08);border:1px solid rgba(251,113,133,.32);color:#ffe4e6}
+.example{background:#0d1420;border:1px solid #344154;border-radius:18px;padding:15px;margin:14px 0}
+.bubble{background:#162238;border-radius:14px;padding:10px 12px;margin:8px 0;color:#eaf2ff}
+.bubble span{color:var(--gold);font-weight:1000}
+.tabs{display:flex;flex-wrap:wrap;gap:8px;margin:12px 0}
+.tabBtn{border:1px solid #344154;background:#132036;color:#eaf1ff;padding:9px 12px;border-radius:12px;cursor:pointer}
+.tabBtn.active{background:var(--accent);color:#07101f;border-color:var(--accent)}
+.tabPanel{display:none}
+.tabPanel.active{display:block}
+.quizBox{background:#0d1420;border:1px solid #344154;border-radius:18px;padding:16px;margin:14px 0}
+.quizQ{font-weight:900;margin-bottom:10px}
+.quizOptions{display:grid;gap:8px}
+.quizOptions button{text-align:left;border:1px solid #344154;background:#111a2b;color:#eaf2ff;border-radius:12px;padding:10px;cursor:pointer}
+.quizOptions button.correct{border-color:var(--green);background:rgba(56,217,118,.15)}
+.quizOptions button.wrong{border-color:var(--red);background:rgba(251,113,133,.14)}
+.quizResult{font-weight:900;margin-top:12px}
+.footer{padding:24px;color:var(--muted);text-align:center}
+.hidden{display:none!important}
+mark{background:rgba(247,201,72,.28);color:#fff;border-radius:4px;padding:0 2px}
+@media(max-width:980px){
+  .layout{grid-template-columns:1fr}
+  .sidebar{position:relative;height:auto}
+  main{padding:18px}
+  .hero h1{font-size:32px}
+  .kpiGrid{grid-template-columns:repeat(2,1fr)}
+}
+@media(max-width:560px){.kpiGrid{grid-template-columns:1fr}}
+@media print{
+  .sidebar,.heroActions,.chips,.searchWrap,.copyBtn,.tabs,.quizOptions button{display:none!important}
+  .layout{display:block}body{background:#fff;color:#111}main{padding:0}
+  .hero,.module,.card,.example,.scriptCard{box-shadow:none;background:#fff;color:#111;border:1px solid #ddd;break-inside:avoid}
+  p,li,td{color:#111}th{background:#eee;color:#111}.scriptLine{background:#f8f8f8;color:#111}
+}
+
+.toolPanel{background:#0d1420;border:1px solid #344154;border-radius:20px;padding:16px;margin:14px 0}
+.formGrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:12px}
+.input,select,textarea{width:100%;background:#0a1220;border:1px solid #334155;border-radius:12px;color:#fff;padding:11px;outline:none}
+textarea{min-height:90px;resize:vertical}
+.resultBox{background:#09111f;border:1px solid #344154;border-radius:16px;padding:14px;margin-top:14px}
+.resultItem{background:#111a2b;border:1px solid #28364b;border-radius:14px;padding:11px;margin:8px 0;font-family:Consolas,monospace}
+.metricCards{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:12px;margin:14px 0}
+.metricCard{background:#0d1420;border:1px solid #344154;border-radius:18px;padding:14px}
+.metricCard .metricNum{font-size:25px;font-weight:1000;color:#fff}
+.levelCard{border-left:5px solid var(--accent)}
+.levelLocked{opacity:.58;filter:saturate(.55)}
+.smallHelp{font-size:12px;color:var(--muted);margin-top:6px}
+
+.statusPill{padding:7px 10px;border-radius:999px;font-weight:900;display:inline-block}.statusPill.ok{background:rgba(56,217,118,.15);color:#b8ffd2}.statusPill.warn{background:rgba(251,191,36,.14);color:#ffe6a2}.statusPill.bad{background:rgba(251,113,133,.14);color:#ffd0d8}
+</style>
+</head>
+<body>
+<div class="layout">
+<aside class="sidebar">
+  <div class="logo">
+    <div class="logoMark">AE</div>
+    <div><div class="brand">Academia Laguna Studios</div><div class="sub">Dashboard de entrenamiento interactivo para chatters</div></div>
+  </div>
+  <div class="searchWrap"><span class="searchIcon">⌕</span><input id="search" class="search" placeholder="Buscar scripts, módulo, objeción..."></div>
+  <div class="progressBox">
+    <div class="progressText"><span>Progreso de lectura</span><span id="progressLabel">0%</span></div>
+    <div class="progressBar"><div class="progressFill" id="progressFill"></div></div>
+  </div>
+  <div class="chips">
+    <button class="active" onclick="filterCards('',this)">Todo</button>
+    <button onclick="filterCards('verde',this)">🟢 Verde</button>
+    <button onclick="filterCards('amarillo',this)">🟡 Amarillo</button>
+    <button onclick="filterCards('rojo',this)">🔴 Rojo</button>
+    <button onclick="filterCards('whale',this)">🐳 Whale</button>
+    <button onclick="filterCards('novia',this)">💔 Novia</button>
+    <button onclick="filterCards('hook',this)">🎣 Hooks</button>
+    <button onclick="filterCards('masivo',this)">📣 Masivos</button>
+    <button onclick="filterCards('objecion',this)">🛡 Objeciones</button>
+  </div>
+  <div class="navTitle">Módulos</div>
+  <nav id="nav">
+    <a href="#m00"><span>00</span>Inicio ejecutivo</a>
+    <a href="#m01"><span>01</span>Fundamentos</a>
+    <a href="#m02"><span>02</span>Mentalidad elite</a>
+    <a href="#m03"><span>03</span>Tipos de subs</a>
+    <a href="#m04"><span>04</span>Perfilado operativo</a>
+    <a href="#m05"><span>05</span>Semáforo comercial</a>
+    <a href="#m06"><span>06</span>Flujo 7 pasos</a>
+    <a href="#m07"><span>07</span>Hooks y masivos</a>
+    <a href="#m07b"><span>07B</span>Mensajes masivos</a>
+    <a href="#m08"><span>08</span>Calendario MM</a>
+    <a href="#m09"><span>09</span>Árbol de decisiones</a>
+    <a href="#m10"><span>10</span>Cierre sin fallar</a>
+    <a href="#m11"><span>11</span>Novia virtual</a>
+    <a href="#m12"><span>12</span>Secuenciación</a>
+    <a href="#m13"><span>13</span>Ventas premium</a>
+    <a href="#m14"><span>14</span>Whales</a>
+    <a href="#m15"><span>15</span>Objeciones</a>
+    <a href="#m16"><span>16</span>Palabras gatillo</a>
+    <a href="#m17"><span>17</span>Scripts exactos</a>
+    <a href="#m18"><span>18</span>Automatización mental</a>
+    <a href="#m19"><span>19</span>KPI y auditoría</a>
+    <a href="#m20"><span>20</span>Rutina del turno</a>
+    <a href="#m21"><span>21</span>Errores críticos</a>
+    <a href="#m22"><span>22</span>Simulaciones</a>
+    <a href="#m23"><span>23</span>Quiz interactivo</a>
+
+    <a href="#m25"><span>25</span>Generador de hooks</a>
+    <a href="#m26"><span>26</span>Asistente de respuestas</a>
+    <a href="#m27"><span>27</span>Tracking de conversión</a>
+    <a href="#m28"><span>28</span>Niveles de entrenamiento</a>
+    <a href="#mNotes"><span>NT</span>Notas del turno</a>
+    <a href="#m24"><span>24</span>Seguridad</a>
+  </nav>
+</aside>
+
+<main>
+<section class="hero" id="m00">
+  <div class="kicker">Agencia Elite · Entrenamiento Comercial</div>
+  <h1>Dashboard Academia de Chatters</h1>
+  <p><b>Manual interactivo para entrenar, corregir y certificar chatters.</b> Enfocado en venta de experiencias reales, dinámica tipo novia virtual, máxima interacción, cierre psicológico, upsell y gestión de whales.</p>
+  <p class="quote">La meta no es “hablar más”. La meta es dirigir mejor: hook → perfilado → tensión → cierre → upsell → recurrencia.</p>
+  <div class="heroActions">
+    <a class="btn primary" href="#m03">Empezar por tipos de subs</a>
+    <a class="btn gold" href="#m22">Ir a simulaciones</a>
+    <button class="btn" onclick="window.print()">Imprimir / Guardar PDF</button>
+    <button class="btn" onclick="expandAll()">Mostrar todo</button>
+  </div>
+</section>
+
+<div class="kpiGrid">
+  <div class="kpi"><div class="num">25</div><div class="lbl">Módulos operativos</div></div>
+  <div class="kpi"><div class="num">120+</div><div class="lbl">Scripts y respuestas</div></div>
+  <div class="kpi"><div class="num">30+</div><div class="lbl">Escenarios de entrenamiento</div></div>
+  <div class="kpi"><div class="num">100%</div><div class="lbl">HTML local sin dependencias</div></div>
+</div>
+
+<section class="module" id="m01">
+  <div class="moduleHeader"><div><h2>01. Fundamentos: qué vendemos realmente</h2><p class="objective">La operación no vende archivos ni tiempo. Vende percepción, cercanía, acceso, tensión y una experiencia que el fan siente personal.</p></div><span class="badge">Base</span></div>
+  <div class="grid">
+    <div class="card"><h4>Experiencia</h4><p>El fan paga por sentirse protagonista, no por recibir algo genérico.</p></div>
+    <div class="card"><h4>Dirección</h4><p>Todo mensaje debe calentar, perfilar, escalar, cerrar o descartar.</p></div>
+    <div class="card"><h4>Frame</h4><p>El fan puede creer que manda, pero el chatter dirige el ritmo y el terreno.</p></div>
+    <div class="card"><h4>Continuidad</h4><p>Ninguna venta debe sentirse como final. Siempre queda una siguiente puerta.</p></div>
+  </div>
+  <div class="success"><b>Regla maestra:</b> si un mensaje no aumenta deseo, no obtiene información útil, no acerca al pago o no filtra, sobra.</div>
+</section>
+
+<section class="module" id="m02">
+  <h2>02. Mentalidad del chatter elite</h2>
+  <p class="objective">El chatter elite combina actor, psicólogo y vendedor. No improvisa por emoción: interpreta un rol y opera con intención comercial.</p>
+  <div class="tableWrap"><table><thead><tr><th>Creencia correcta</th><th>Aplicación práctica</th><th>Error que corrige</th></tr></thead><tbody>
+    <tr><td>No respondo, conduzco.</td><td>Siempre llevo la conversación a un próximo paso.</td><td>Conversar sin dirección.</td></tr>
+    <tr><td>No regalo atención.</td><td>La atención se dosifica para crear valor.</td><td>Convertirse en “amiga gratis”.</td></tr>
+    <tr><td>No discuto precio.</td><td>Reencuadro valor y exclusividad.</td><td>Bajar precios por inseguridad.</td></tr>
+    <tr><td>No persigo rojos.</td><td>Filtro y sigo con potenciales compradores.</td><td>Perder turno en timewasters.</td></tr>
+    <tr><td>No quemo cartas.</td><td>Siempre guardo un próximo escalón.</td><td>Vender una vez y perder LTV.</td></tr>
+  </tbody></table></div>
+</section>
+
+<section class="module" id="m03">
+  <h2>03. Tipos de subs y cómo llevarlos EXTENDIDO</h2>
+  <p class="objective">La clasificación correcta define todo: tono, velocidad, presión, tipo de hook, cierre y seguimiento.</p>
+  <div class="tabs">
+    <button class="tabBtn active" onclick="showTab('t-verde',this)">🟢 Verde</button>
+    <button class="tabBtn" onclick="showTab('t-amarillo',this)">🟡 Amarillo</button>
+    <button class="tabBtn" onclick="showTab('t-rojo',this)">🔴 Rojo</button>
+    <button class="tabBtn" onclick="showTab('t-whale',this)">🐳 Whale</button>
+    <button class="tabBtn" onclick="showTab('t-frio',this)">❄️ Frío</button>
+    <button class="tabBtn" onclick="showTab('t-novia',this)">💔 Novia virtual</button>
+    <button class="tabBtn" onclick="showTab('t-tactico',this)">🧮 Táctico</button>
+    <button class="tabBtn" onclick="showTab('t-control',this)">🎮 Controlador</button>
+  </div>
+
+  <div id="t-verde" class="tabPanel active">
+    <h3>🟢 Sub verde: listo para comprar</h3>
+    <div class="grid">
+      <div class="card"><h4>Señales</h4><p>Responde rápido, pregunta “qué harías”, pide verte, imagina, usa emojis calientes, ya compró antes.</p></div>
+      <div class="card"><h4>Psicología</h4><p>Está emocionalmente dentro. Lo único que puede matar la venta es hablar demasiado.</p></div>
+      <div class="card"><h4>Ruta</h4><p>Escalada corta → cierre → upsell inmediato.</p></div>
+    </div>
+    <div class="scriptCard" data-tag="verde script"><div class="scriptTitle">Secuencia verde <button class="copyBtn" onclick="copyScript(this)">Copiar</button></div>
+      <div class="scriptLine">Me gusta cómo me estás hablando...</div>
+      <div class="scriptLine">Esto ya no se siente como para solo escribir.</div>
+      <div class="scriptLine">Ven, no quiero que esto se enfríe ahora.</div>
+      <div class="scriptLine">Si te quedas después, puedo subirlo de nivel.</div>
+    </div>
+  </div>
+
+  <div id="t-amarillo" class="tabPanel">
+    <h3>🟡 Sub amarillo: quiere pero duda</h3>
+    <div class="grid">
+      <div class="card"><h4>Señales</h4><p>Pregunta pero no decide, responde lento, dice “maybe”, “después”, “no sé”.</p></div>
+      <div class="card"><h4>Psicología</h4><p>Busca seguridad y permiso. Debe sentir que avanzar es fácil y que no avanzar lo deja fuera.</p></div>
+      <div class="card"><h4>Ruta</h4><p>Provocación → test de intención → mini cierre. Máximo 4 intercambios.</p></div>
+    </div>
+    <div class="scriptCard" data-tag="amarillo script"><div class="scriptTitle">Secuencia amarillo <button class="copyBtn" onclick="copyScript(this)">Copiar</button></div>
+      <div class="scriptLine">Siento que quieres... pero te estás aguantando.</div>
+      <div class="scriptLine">Dime la verdad: vas en serio conmigo o solo estás mirando?</div>
+      <div class="scriptLine">Te puedo abrir un primer paso, pero solo si me sigues el ritmo.</div>
+    </div>
+  </div>
+
+  <div id="t-rojo" class="tabPanel">
+    <h3>🔴 Sub rojo: timewaster</h3>
+    <div class="grid">
+      <div class="card"><h4>Señales</h4><p>Pide gratis, responde monosílabos, cambia de tema, regatea desde el inicio, exige sin aportar.</p></div>
+      <div class="card"><h4>Psicología</h4><p>Busca atención gratis o probar límites.</p></div>
+      <div class="card"><h4>Ruta</h4><p>Límite elegante → una oportunidad → salida.</p></div>
+    </div>
+    <div class="scriptCard" data-tag="rojo script"><div class="scriptTitle">Secuencia rojo <button class="copyBtn" onclick="copyScript(this)">Copiar</button></div>
+      <div class="scriptLine">Jajaja tú sí eres atrevido, pero conmigo no funciona gratis.</div>
+      <div class="scriptLine">Si vas en serio, me lo demuestras.</div>
+      <div class="scriptLine">Cuando estés listo, me buscas.</div>
+    </div>
+  </div>
+
+  <div id="t-whale" class="tabPanel">
+    <h3>🐳 Whale: alto valor y recurrencia</h3>
+    <div class="grid">
+      <div class="card"><h4>Señales</h4><p>Compra sin negociar, compra 2 veces, vuelve después de comprar, quiere prioridad o experiencia más personal.</p></div>
+      <div class="card"><h4>Psicología</h4><p>No quiere sentirse uno más. Paga por trato VIP, control y acceso limitado.</p></div>
+      <div class="card"><h4>Ruta</h4><p>Exclusividad → agenda → escalera de gasto → continuidad manual.</p></div>
+    </div>
+    <div class="scriptCard" data-tag="whale script"><div class="scriptTitle">Secuencia whale <button class="copyBtn" onclick="copyScript(this)">Copiar</button></div>
+      <div class="scriptLine">Contigo se siente diferente, no sé qué me haces.</div>
+      <div class="scriptLine">No suelo abrir este espacio con cualquiera.</div>
+      <div class="scriptLine">Te puedo guardar unos minutos, pero tiene que ser ahora.</div>
+      <div class="scriptLine">Después de esto, te dejo algo pendiente solo para ti.</div>
+    </div>
+  </div>
+
+  <div id="t-frio" class="tabPanel">
+    <h3>❄️ Sub frío: hay que reactivar</h3>
+    <div class="grid">
+      <div class="card"><h4>Señales</h4><p>No responde, aparece y desaparece, mira pero no interactúa, dejó una conversación abierta.</p></div>
+      <div class="card"><h4>Psicología</h4><p>Necesita curiosidad, ego o un bucle pendiente. No se le vende directo.</p></div>
+      <div class="card"><h4>Ruta</h4><p>Hook emocional → reto suave → validación → escalar si responde.</p></div>
+    </div>
+    <div class="scriptCard" data-tag="frio hook"><div class="scriptTitle">Reactivación frío <button class="copyBtn" onclick="copyScript(this)">Copiar</button></div>
+      <div class="scriptLine">Mor... pensé que eras diferente, pero te me desapareciste.</div>
+      <div class="scriptLine">Me quedé con algo pendiente contigo y ahora me dio curiosidad.</div>
+      <div class="scriptLine">Vas a volver con ganas o solo vienes a mirar?</div>
+    </div>
+  </div>
+
+  <div id="t-novia" class="tabPanel">
+    <h3>💔 Sub emocional / novia virtual</h3>
+    <div class="grid">
+      <div class="card"><h4>Señales</h4><p>Busca cariño, rutina, atención, pregunta por el día, quiere sentirse importante.</p></div>
+      <div class="card"><h4>Psicología</h4><p>Compra continuidad emocional. Quiere sentirse recordado y elegido.</p></div>
+      <div class="card"><h4>Ruta</h4><p>Memoria → ternura → tensión suave → límite → monetización natural.</p></div>
+    </div>
+    <div class="scriptCard" data-tag="novia script"><div class="scriptTitle">Secuencia novia virtual <button class="copyBtn" onclick="copyScript(this)">Copiar</button></div>
+      <div class="scriptLine">Hoy me acordé de ti de la nada.</div>
+      <div class="scriptLine">Me gusta cómo apareces y me cambias el mood.</div>
+      <div class="scriptLine">Pero si vas a tenerme así, tienes que seguirme el ritmo.</div>
+      <div class="scriptLine">Te puedo guardar un momento solo para ti hoy.</div>
+    </div>
+  </div>
+
+  <div id="t-tactico" class="tabPanel">
+    <h3>🧮 Comprador táctico: pregunta precio y compara</h3>
+    <div class="grid">
+      <div class="card"><h4>Señales</h4><p>Pregunta precio rápido, compara, pide descuento, quiere saber “qué incluye”.</p></div>
+      <div class="card"><h4>Psicología</h4><p>Está en modo racional. Hay que sacarlo del cálculo y llevarlo a valor emocional.</p></div>
+      <div class="card"><h4>Ruta</h4><p>Reencuadre → exclusividad → alternativa A/B.</p></div>
+    </div>
+    <div class="scriptCard" data-tag="objecion script"><div class="scriptTitle">Secuencia táctico <button class="copyBtn" onclick="copyScript(this)">Copiar</button></div>
+      <div class="scriptLine">No quiero que lo pienses como precio.</div>
+      <div class="scriptLine">Esto vale por cómo lo vas a vivir conmigo ahora.</div>
+      <div class="scriptLine">Puedes entrar suave primero o ir directo a algo más privado conmigo.</div>
+    </div>
+  </div>
+
+  <div id="t-control" class="tabPanel">
+    <h3>🎮 Controlador: quiere mandar</h3>
+    <div class="grid">
+      <div class="card"><h4>Señales</h4><p>Ordena, exige, quiere decidir todo, usa tono dominante.</p></div>
+      <div class="card"><h4>Psicología</h4><p>Quiere sentir control. Se le da elección limitada, no control real.</p></div>
+      <div class="card"><h4>Ruta</h4><p>Ceder detalle → mantener estructura → cerrar por alternativas.</p></div>
+    </div>
+    <div class="scriptCard" data-tag="script"><div class="scriptTitle">Secuencia controlador <button class="copyBtn" onclick="copyScript(this)">Copiar</button></div>
+      <div class="scriptLine">Me gusta cuando quieres mandar, pero conmigo tienes que ganártelo.</div>
+      <div class="scriptLine">Te dejo escoger: lo hacemos suave primero o vas directo a algo más intenso?</div>
+      <div class="scriptLine">Si eliges, yo decido cómo sigo.</div>
+    </div>
+  </div>
+</section>
+
+<section class="module" id="m04">
+  <h2>04. Perfilado operativo en menos de 2 minutos</h2>
+  <p class="objective">El perfilado no es entrevista. Es lectura silenciosa: tono, velocidad, contexto, iniciativa y objeciones.</p>
+  <div class="tableWrap"><table><thead><tr><th>Señal</th><th>Qué indica</th><th>Acción</th></tr></thead><tbody>
+    <tr><td>Responde en segundos</td><td>Temperatura alta.</td><td>Escalar y cerrar.</td></tr>
+    <tr><td>Responde corto</td><td>Frío o quiere ser dirigido.</td><td>Reto suave.</td></tr>
+    <tr><td>Pregunta de vuelta</td><td>Interés recíproco.</td><td>Validar intención.</td></tr>
+    <tr><td>Habla de estar solo / cama / noche</td><td>Buen timing.</td><td>Crear escenario.</td></tr>
+    <tr><td>Pregunta precio temprano</td><td>Interés con fricción racional.</td><td>Reencuadrar valor.</td></tr>
+    <tr><td>Pide gratis</td><td>Prueba límites.</td><td>Límite y descarte.</td></tr>
+  </tbody></table></div>
+  <div class="scriptCard" data-tag="script"><div class="scriptTitle">Preguntas encubiertas <button class="copyBtn" onclick="copyScript(this)">Copiar</button></div>
+    <div class="scriptLine">A esta hora tú estás tranquilo o peligroso?</div>
+    <div class="scriptLine">Tú eres más de ir suave o de perder el control?</div>
+    <div class="scriptLine">Si te dejo elegir una cosa ahora mismo, qué pedirías?</div>
+    <div class="scriptLine">Eres de los que se atreven cuando tienen oportunidad?</div>
+  </div>
+</section>
+
+<section class="module" id="m05">
+  <h2>05. Semáforo comercial</h2>
+  <p class="objective">El semáforo decide prioridad de tiempo. En cuentas con tráfico bajo, esto es vida o muerte.</p>
+  <div class="tableWrap"><table><thead><tr><th>Color</th><th>Criterios</th><th>Tiempo permitido</th><th>Acción</th><th>Meta</th></tr></thead><tbody>
+    <tr><td>🟢 Verde</td><td>2+ señales: rápido, pregunta, imagina, ya compró, pide ver.</td><td>Prioridad total.</td><td>Cierre + upsell.</td><td>Ingreso inmediato.</td></tr>
+    <tr><td>🟡 Amarillo</td><td>Curioso, duda, conversa pero no decide.</td><td>4 intercambios.</td><td>Validar intención.</td><td>Subir a verde.</td></tr>
+    <tr><td>🔴 Rojo</td><td>Gratis, evasivo, seco, irrespetuoso.</td><td>2-3 mensajes.</td><td>Cortar.</td><td>Ahorrar tiempo.</td></tr>
+  </tbody></table></div>
+</section>
+
+<section class="module" id="m06">
+  <h2>06. Flujo de venta de 7 pasos</h2>
+  <p class="objective">Este flujo evita la sobreventa y permite que la venta se sienta natural.</p>
+  <div class="tableWrap"><table><thead><tr><th>Paso</th><th>Objetivo psicológico</th><th>Frase ejemplo</th><th>Error común</th></tr></thead><tbody>
+    <tr><td>1. Hook</td><td>Abrir curiosidad.</td><td>Mor... me acordé de algo pendiente.</td><td>Vender de una.</td></tr>
+    <tr><td>2. Validación</td><td>Medir intención.</td><td>Qué harías conmigo ahora?</td><td>Interrogar.</td></tr>
+    <tr><td>3. Escalada</td><td>Subir tensión.</td><td>Contigo me pondría peligrosa.</td><td>Explicar demasiado.</td></tr>
+    <tr><td>4. Puente</td><td>Pasar a experiencia.</td><td>Esto sería mejor si me vieras ahora.</td><td>Decirlo frío.</td></tr>
+    <tr><td>5. Cierre</td><td>Acción inmediata.</td><td>Ven, no quiero que se enfríe.</td><td>Esperar demasiado.</td></tr>
+    <tr><td>6. Upsell</td><td>Multiplicar ticket.</td><td>Eso fue suave; puedo subirlo.</td><td>No pedir segunda venta.</td></tr>
+    <tr><td>7. Continuidad</td><td>Crear regreso.</td><td>Me quedé con ganas de más contigo.</td><td>Cerrar en seco.</td></tr>
+  </tbody></table></div>
+</section>
+
+
+<section class="module" id="m07">
+<h2>07. Hooks avanzados por tipo de sub y horario</h2>
+<p class="objective">Hooks diseñados según psicología + momento del día. Aquí se define si hay venta o no.</p>
+
+<h3>🟢 Verde</h3>
+<div class="scriptCard">
+<div class="scriptLine">No me gusta cómo me estás hablando… me estás provocando.</div>
+<div class="scriptLine">Esto ya no es para seguir escribiendo.</div>
+<div class="scriptLine">Si sigues así, voy a hacer algo contigo.</div>
+<div class="scriptLine">Ven ahora… esto no dura mucho.</div>
+</div>
+
+<h3>🟡 Amarillo</h3>
+<div class="scriptCard">
+<div class="scriptLine">Siento que quieres… pero no te decides.</div>
+<div class="scriptLine">Tú eres de los que se atreve o solo mira?</div>
+<div class="scriptLine">No sé si tomarte en serio todavía.</div>
+<div class="scriptLine">Convénceme.</div>
+</div>
+
+<h3>🔴 Frío</h3>
+<div class="scriptCard">
+<div class="scriptLine">Pensé que eras diferente…</div>
+<div class="scriptLine">Te iba a escribir algo, pero mejor no.</div>
+<div class="scriptLine">Hoy me acordé de ti.</div>
+<div class="scriptLine">Apareciste en mi cabeza.</div>
+</div>
+
+<h3>🐳 Whale</h3>
+<div class="scriptCard">
+<div class="scriptLine">No hago esto con cualquiera…</div>
+<div class="scriptLine">Te guardé algo.</div>
+<div class="scriptLine">Tengo algo solo para ti.</div>
+<div class="scriptLine">Si entras ahora, te doy prioridad.</div>
+</div>
+
+<h3>💔 Novia virtual</h3>
+<div class="scriptCard">
+<div class="scriptLine">Hoy me hiciste falta.</div>
+<div class="scriptLine">Pensé en ti.</div>
+<div class="scriptLine">Hay algo en ti.</div>
+<div class="scriptLine">No sé qué me haces.</div>
+</div>
+
+<h3>⏰ Por horario</h3>
+
+<b>Mañana</b>
+<div class="scriptCard">
+<div class="scriptLine">Buenos días… desperté pensando en ti.</div>
+<div class="scriptLine">No deberías ser lo primero que pienso.</div>
+</div>
+
+<b>Tarde</b>
+<div class="scriptCard">
+<div class="scriptLine">Estoy en un mood raro.</div>
+<div class="scriptLine">Me estoy aburriendo… pero contigo no.</div>
+</div>
+
+<b>Noche</b>
+<div class="scriptCard">
+<div class="scriptLine">No deberías escribirme a esta hora.</div>
+<div class="scriptLine">Si apareces ahora… pasan cosas.</div>
+</div>
+
+<b>Madrugada</b>
+<div class="scriptCard">
+<div class="scriptLine">No puedo dormir…</div>
+<div class="scriptLine">Si estás despierto, ven.</div>
+</div>
+
+</section>
+
+
+
+<section class="module" id="m07b">
+  <h2>07B. Mensajes masivos de inicio de turno</h2>
+  <p class="objective">Los mensajes masivos se usan dentro de los primeros 30 minutos del turno para abrir conversaciones y detectar intención. No deben decir buenos días, que se está despertando o que se va a dormir. Deben funcionar en cualquier horario y sentirse personales.</p>
+
+  <div class="grid">
+    <div class="card"><h4>Diferencia vs hook</h4><p>El masivo abre tráfico al inicio del turno. El hook se usa dentro del chat para empujar una conversación activa.</p></div>
+    <div class="card"><h4>Objetivo real</h4><p>Provocar respuesta, clasificar al sub y detectar si es verde, amarillo, rojo, whale o emocional.</p></div>
+    <div class="card"><h4>Regla crítica</h4><p>No mencionar precio, video, contenido, llamada, comprar, promoción u oferta.</p></div>
+    <div class="card"><h4>Uso operativo</h4><p>Enviar 1 masivo al inicio, esperar 10-15 minutos y trabajar primero los verdes.</p></div>
+  </div>
+
+  <div class="warning"><b>Idea central:</b> el sub debe sentir: “vaya, esto es conmigo”. Si suena como campaña, se pierde el efecto.</div>
+
+  <h3>Reglas para que un masivo no parezca masivo</h3>
+  <div class="tableWrap"><table><thead><tr><th>Regla</th><th>Cómo aplicarla</th><th>Ejemplo correcto</th></tr></thead><tbody>
+    <tr><td>Debe ser atemporal</td><td>Funciona igual en cualquier turno.</td><td>Me acordé de algo que quedó pendiente contigo...</td></tr>
+    <tr><td>Debe parecer personal</td><td>Usa memoria, duda, tensión o reto.</td><td>No sé si debería decirte esto, pero aquí estoy.</td></tr>
+    <tr><td>Debe abrir curiosidad</td><td>No explica todo; deja un espacio para que pregunte.</td><td>Hay algo que no te dije la última vez.</td></tr>
+    <tr><td>Debe permitir respuesta fácil</td><td>El sub puede responder “qué?”, “dime”, “jaja”, “cuenta”.</td><td>Tengo una pregunta para ti, pero no sé si hacerla.</td></tr>
+  </tbody></table></div>
+
+  <h3>📌 Masivos universales para cualquier turno</h3>
+  <div class="scriptCard" data-tag="masivo hook"><div class="scriptTitle">Universales naturales <button class="copyBtn" onclick="copyScript(this)">Copiar</button></div>
+    <div class="scriptLine">Mor... me acordé de algo que quedó pendiente contigo.</div>
+    <div class="scriptLine">No sé si debería escribirte esto, pero aquí estoy.</div>
+    <div class="scriptLine">Hay algo que no te dije la última vez.</div>
+    <div class="scriptLine">Me dio curiosidad saber si sigues igual conmigo.</div>
+    <div class="scriptLine">Te iba a dejar tranquilo, pero me acordé de ti.</div>
+    <div class="scriptLine">Siento que tú y yo dejamos algo sin terminar.</div>
+    <div class="scriptLine">No sé por qué, pero contigo se siente diferente.</div>
+    <div class="scriptLine">Hay una pregunta que me quedé con ganas de hacerte.</div>
+    <div class="scriptLine">Me apareció tu nombre y me dio curiosidad.</div>
+    <div class="scriptLine">Tengo una idea contigo, pero no sé si te atreves.</div>
+  </div>
+
+  <h3>🧠 Masivos de curiosidad psicológica</h3>
+  <div class="scriptCard" data-tag="masivo hook"><div class="scriptTitle">Curiosidad / bucle abierto <button class="copyBtn" onclick="copyScript(this)">Copiar</button></div>
+    <div class="scriptLine">Creo que sé algo de ti que no me has dicho.</div>
+    <div class="scriptLine">Hay algo de ti que me da demasiada curiosidad.</div>
+    <div class="scriptLine">No te voy a mentir... pensé algo raro contigo.</div>
+    <div class="scriptLine">Tengo una duda contigo y no me la puedo sacar.</div>
+    <div class="scriptLine">No sé si eres así con todas o solo conmigo.</div>
+    <div class="scriptLine">Me quedé pensando en cómo reaccionarías si te dijera algo.</div>
+    <div class="scriptLine">A veces siento que te guardas lo que de verdad quieres decir.</div>
+    <div class="scriptLine">Hay algo que quiero probar contigo, pero necesito saber si te atreves.</div>
+  </div>
+
+  <h3>💔 Masivos tipo novia virtual</h3>
+  <div class="scriptCard" data-tag="masivo novia"><div class="scriptTitle">Conexión emocional <button class="copyBtn" onclick="copyScript(this)">Copiar</button></div>
+    <div class="scriptLine">Me dio por pensar en ti y no sé si eso es buena señal.</div>
+    <div class="scriptLine">A veces apareces en mi cabeza sin avisar.</div>
+    <div class="scriptLine">No sé qué tienes, pero me dan ganas de buscarte.</div>
+    <div class="scriptLine">Contigo me pasa algo raro... me dan ganas de quedarme hablando.</div>
+    <div class="scriptLine">No sé si extrañarte o molestarte por desaparecer.</div>
+    <div class="scriptLine">Me gusta cuando apareces, pero no cuando te pierdes.</div>
+    <div class="scriptLine">Siento que contigo puedo ser dulce, pero también peligrosa.</div>
+    <div class="scriptLine">No sé si cuidarte o provocarte hoy.</div>
+  </div>
+
+  <h3>🔥 Masivos para filtrar intención</h3>
+  <div class="scriptCard" data-tag="masivo amarillo"><div class="scriptTitle">Filtro amarillo → verde / rojo <button class="copyBtn" onclick="copyScript(this)">Copiar</button></div>
+    <div class="scriptLine">Tú eres de los que se atreve o de los que solo mira?</div>
+    <div class="scriptLine">Dime la verdad... contigo se puede jugar o no?</div>
+    <div class="scriptLine">No sé si tomarte en serio todavía.</div>
+    <div class="scriptLine">Quiero ver si sabes seguirme el ritmo.</div>
+    <div class="scriptLine">Apuesto a que tienes ganas, pero te haces el difícil.</div>
+    <div class="scriptLine">Si te doy entrada, vas a saber qué hacer?</div>
+    <div class="scriptLine">No me hagas pensar que eres de los que solo hablan.</div>
+    <div class="scriptLine">Convénceme de que no eres uno más.</div>
+  </div>
+
+  <h3>🐳 Masivos para whales o compradores anteriores</h3>
+  <div class="scriptCard" data-tag="masivo whale"><div class="scriptTitle">Reactivación VIP / compradores <button class="copyBtn" onclick="copyScript(this)">Copiar</button></div>
+    <div class="scriptLine">Contigo no me gusta mandar cosas genéricas.</div>
+    <div class="scriptLine">Me acordé de algo que tú sí sabrías valorar.</div>
+    <div class="scriptLine">Tengo algo que no le enseñaría a cualquiera.</div>
+    <div class="scriptLine">Pensé en ti porque esto va más con alguien como tú.</div>
+    <div class="scriptLine">No sé si mereces que te dé prioridad otra vez.</div>
+    <div class="scriptLine">Hay algo que te guardaría, pero no por mucho tiempo.</div>
+    <div class="scriptLine">Tú sabes que contigo me pongo diferente.</div>
+    <div class="scriptLine">Si apareces ahora, puede que te deje entrar primero.</div>
+  </div>
+
+  <h3>❄️ Masivos para subs fríos o dormidos</h3>
+  <div class="scriptCard" data-tag="masivo frio"><div class="scriptTitle">Reactivación fría <button class="copyBtn" onclick="copyScript(this)">Copiar</button></div>
+    <div class="scriptLine">Pensé que eras diferente... me equivoqué?</div>
+    <div class="scriptLine">Te desapareciste justo cuando esto podía ponerse interesante.</div>
+    <div class="scriptLine">No sé si sigues ahí o si ya te perdí.</div>
+    <div class="scriptLine">Me dio curiosidad saber si todavía te provoco algo.</div>
+    <div class="scriptLine">No voy a perseguirte, pero sí me dio curiosidad.</div>
+    <div class="scriptLine">Apareciste por aquí y me dejaste pensando.</div>
+    <div class="scriptLine">Siento que te quedaste mirando desde lejos.</div>
+    <div class="scriptLine">Si vas a volver, vuelve con ganas.</div>
+  </div>
+
+  <h3>🧩 Qué hacer según respuesta del masivo</h3>
+  <div class="tableWrap"><table><thead><tr><th>Respuesta del sub</th><th>Lectura</th><th>Acción</th><th>Respuesta sugerida</th></tr></thead><tbody>
+    <tr><td>“Qué?” / “Dime” / “Cuenta”</td><td>🟡 Curioso</td><td>Validar intención</td><td>Sabía que ibas a preguntar... pero no sé si estás listo.</td></tr>
+    <tr><td>“Jaja” / emoji / respuesta corta</td><td>🟡 Tibio bajo</td><td>Provocar</td><td>Muy tranquilo estás... esperaba un poquito más de ti.</td></tr>
+    <tr><td>“Quiero verte” / “hazlo” / “vamos”</td><td>🟢 Verde</td><td>Cerrar rápido</td><td>Entonces ven, no quiero que esto se enfríe.</td></tr>
+    <tr><td>“Cuánto?” / “precio?”</td><td>🟡 Táctico</td><td>Reencuadrar valor</td><td>No lo pienses como precio, piensa en lo que vas a vivir conmigo.</td></tr>
+    <tr><td>“Gratis?” / “manda primero”</td><td>🔴 Rojo</td><td>Límite y salida</td><td>Jajaja conmigo no funciona gratis. Si vas en serio, me lo demuestras.</td></tr>
+    <tr><td>No responde</td><td>Sin señal</td><td>No insistir</td><td>Rotar otro masivo en próximo bloque, no perseguir.</td></tr>
+  </tbody></table></div>
+
+  <div class="success"><b>Protocolo:</b> primeros 30 minutos = enviar masivo, esperar señales, clasificar respuestas y trabajar primero verdes, luego amarillos. Rojos no deben consumir el turno.</div>
+</section>
+
+<section class="module" id="m08">
+  <h2>08. Calendario de masivos por objetivo</h2>
+  <p class="objective">No todos los MM sirven para todo momento. La hora define intención.</p>
+  <div class="tableWrap"><table><thead><tr><th>Hora</th><th>Objetivo</th><th>Tipo</th><th>Mensaje</th></tr></thead><tbody>
+    <tr><td>Inicio turno</td><td>Abrir chats</td><td>Curiosidad</td><td>Oye... no sé por qué hoy pensé en ti.</td></tr>
+    <tr><td>Media mañana</td><td>Filtrar intención</td><td>Pregunta</td><td>Dime qué harías conmigo si estuviera cerca.</td></tr>
+    <tr><td>Antes de pico</td><td>Preparar cierre</td><td>Mood</td><td>Estoy en un mood peligroso, pero no sé cuánto dure.</td></tr>
+    <tr><td>Pico de tráfico</td><td>Cerrar</td><td>Escasez</td><td>Solo estoy así ahora; no te me pierdas.</td></tr>
+    <tr><td>Madrugada</td><td>Reactivar</td><td>Pendiente</td><td>Iba a hacer algo y pensé en ti.</td></tr>
+    <tr><td>Cierre turno</td><td>Dejar gancho</td><td>Continuidad</td><td>Si no vienes ahora, te lo guardo para cuando vuelvas con ganas.</td></tr>
+  </tbody></table></div>
+</section>
+
+<section class="module" id="m09">
+  <h2>09. Árbol de decisiones automático</h2>
+  <p class="objective">Ruta exacta para responder sin improvisar.</p>
+  <div class="tableWrap"><table><thead><tr><th>Respuesta del fan</th><th>Lectura</th><th>Respuesta exacta</th><th>Próximo paso</th></tr></thead><tbody>
+    <tr><td>Qué pendiente?</td><td>Curioso.</td><td>No te hagas... sabes que me dejaste con ganas.</td><td>Validar.</td></tr>
+    <tr><td>No recuerdo.</td><td>Amarillo.</td><td>Peor... entonces te toca recuperarlo conmigo.</td><td>Escalar si juega.</td></tr>
+    <tr><td>Jaja.</td><td>Frío o tímido.</td><td>Muy tranquilo estás... esperaba más de ti.</td><td>Reto.</td></tr>
+    <tr><td>Quiero verte.</td><td>Verde.</td><td>Entonces ven, no quiero que esto se enfríe.</td><td>Cierre.</td></tr>
+    <tr><td>Cuánto?</td><td>Interés racional.</td><td>Primero dime si podrías conmigo. Esto no es para cualquiera.</td><td>Valor.</td></tr>
+    <tr><td>Después.</td><td>Duda.</td><td>Después no se siente igual; ahora es cuando estoy así.</td><td>Escasez.</td></tr>
+    <tr><td>No tengo dinero.</td><td>Rojo o bajo valor.</td><td>Entonces viniste a mirar? Cuando vayas en serio me buscas.</td><td>Cortar.</td></tr>
+    <tr><td>Manda gratis.</td><td>Timewaster.</td><td>Jajaja conmigo no funciona así.</td><td>Cortar si insiste.</td></tr>
+  </tbody></table></div>
+</section>
+
+<section class="module" id="m10">
+  <h2>10. Sistema para cerrar sin fallar</h2>
+  <p class="objective">Cierra cuando hay pico emocional. Si esperas, el fan vuelve a pensar y se enfría.</p>
+  <div class="grid">
+    <div class="card"><h4>Señal 1</h4><p>Responde rápido.</p></div>
+    <div class="card"><h4>Señal 2</h4><p>Pregunta qué harías o qué puede ver.</p></div>
+    <div class="card"><h4>Señal 3</h4><p>Imagina escenario contigo.</p></div>
+    <div class="card"><h4>Señal 4</h4><p>Repite deseo o insiste.</p></div>
+  </div>
+  <div class="scriptCard" data-tag="script"><div class="scriptTitle">Cierres de pico emocional <button class="copyBtn" onclick="copyScript(this)">Copiar</button></div>
+    <div class="scriptLine">Esto ya no es para solo escribir.</div>
+    <div class="scriptLine">Ven, no quiero que esto se enfríe.</div>
+    <div class="scriptLine">Si vas a entrar conmigo, es ahora.</div>
+    <div class="scriptLine">No lo pienses tanto; solo ven.</div>
+    <div class="scriptLine">Te dejo escoger: algo suave primero o directo a algo más privado.</div>
+  </div>
+</section>
+
+<section class="module" id="m11">
+  <h2>11. Experiencia tipo novia virtual</h2>
+  <p class="objective">La novia virtual monetiza vínculo, rutina y memoria. No es amistad gratis: es atención emocional con dirección comercial.</p>
+  <div class="tableWrap"><table><thead><tr><th>Elemento</th><th>Cómo se usa</th><th>Ejemplo</th></tr></thead><tbody>
+    <tr><td>Memoria</td><td>Recordar gustos o frases.</td><td>Me acordé que a ti te gusta cuando me pongo así.</td></tr>
+    <tr><td>Rutina</td><td>Aparecer en momentos clave.</td><td>Antes de dormir me acordé de ti.</td></tr>
+    <tr><td>Cuidado</td><td>Hacerlo sentir visto.</td><td>Hoy te sentí raro... qué pasó?</td></tr>
+    <tr><td>Deseo</td><td>No dejarlo solo en ternura.</td><td>Me pones dulce, pero también peligrosa.</td></tr>
+    <tr><td>Límite</td><td>Evitar atención infinita.</td><td>Me gusta hablar contigo, pero si vas en serio, sígueme el ritmo.</td></tr>
+  </tbody></table></div>
+  <div class="scriptCard" data-tag="novia"><div class="scriptTitle">Secuencia novia virtual de 5 días <button class="copyBtn" onclick="copyScript(this)">Copiar</button></div>
+    <div class="scriptLine">Día 1: Hoy pensé en ti de forma random... me dio curiosidad saber cómo estás.</div>
+    <div class="scriptLine">Día 2: Ayer me dejaste con una sonrisa rara. No sé qué tienes.</div>
+    <div class="scriptLine">Día 3: Me gusta que aparezcas, pero no quiero que seas de los que solo hablan bonito.</div>
+    <div class="scriptLine">Día 4: Si seguimos así, me vas a hacer guardarte un momento solo para ti.</div>
+    <div class="scriptLine">Día 5: Hoy no tengo mucho tiempo, pero si vienes ahora, te doy prioridad.</div>
+  </div>
+</section>
+
+<section class="module" id="m12">
+  <h2>12. Secuenciación: el corazón del ticket alto</h2>
+  <p class="objective">No se entrega todo de golpe. Se sube por escalones, dejando hambre para el siguiente.</p>
+  <div class="tableWrap"><table><thead><tr><th>Nivel</th><th>Objetivo</th><th>Cómo se siente para el fan</th><th>Gancho al siguiente</th></tr></thead><tbody>
+    <tr><td>1. Tease</td><td>Convertir frío en tibio.</td><td>“Me dejó ver algo personal”.</td><td>Esto fue solo una parte.</td></tr>
+    <tr><td>2. Primer pago</td><td>Validar que paga.</td><td>“Estoy dentro”.</td><td>Si te gustó esto, puedo seguir.</td></tr>
+    <tr><td>3. Segundo escalón</td><td>Subir intensidad.</td><td>“Esto va avanzando conmigo”.</td><td>Aún no viste lo mejor.</td></tr>
+    <tr><td>4. Premium</td><td>Ticket alto.</td><td>“Esto no es para cualquiera”.</td><td>La próxima vez lo hacemos más personal.</td></tr>
+    <tr><td>5. VIP recurrente</td><td>Retención.</td><td>“Tengo acceso especial”.</td><td>Agenda / prioridad.</td></tr>
+  </tbody></table></div>
+  <div class="note"><b>Regla:</b> si entregas el clímax demasiado rápido, matas el ARPU y el LTV.</div>
+</section>
+
+<section class="module" id="m13">
+  <h2>13. Ventas premium: experiencias privadas y momentos en vivo</h2>
+  <p class="objective">Las ventas premium deben sentirse reservadas, no disponibles como “servicio genérico”.</p>
+  <div class="grid">
+    <div class="card"><h4>Pago previo</h4><p>No se agenda ni se molesta a la modelo sin confirmación.</p></div>
+    <div class="card"><h4>Marco VIP</h4><p>No se presenta como lista; se presenta como acceso limitado.</p></div>
+    <div class="card"><h4>Anclaje</h4><p>Primero se muestra opción alta, luego una más accesible.</p></div>
+    <div class="card"><h4>Continuidad</h4><p>Terminar arriba y dejar una razón para repetir.</p></div>
+  </div>
+  <div class="scriptCard" data-tag="script"><div class="scriptTitle">Venta privada sutil <button class="copyBtn" onclick="copyScript(this)">Copiar</button></div>
+    <div class="scriptLine">Esto no se siente como para seguir solo por mensajes.</div>
+    <div class="scriptLine">Te puedo abrir un espacio privado, pero no lo hago con cualquiera.</div>
+    <div class="scriptLine">Si quieres entrar conmigo, lo dejamos confirmado ahora.</div>
+    <div class="scriptLine">Y si te portas bien, después te guardo algo más personal.</div>
+  </div>
+</section>
+
+<section class="module" id="m14">
+  <h2>14. Whales: detección, conversión y recurrencia</h2>
+  <p class="objective">La whale se cultiva con trato especial, agenda, memoria y escalera de valor.</p>
+  <div class="tableWrap"><table><thead><tr><th>Señal</th><th>Etiqueta</th><th>Acción</th></tr></thead><tbody>
+    <tr><td>Compra sin regatear.</td><td>VIP potencial.</td><td>Seguimiento manual.</td></tr>
+    <tr><td>Compra 2 veces seguidas.</td><td>Whale candidata.</td><td>Crear ruta recurrente.</td></tr>
+    <tr><td>Pregunta por más.</td><td>Alta intención.</td><td>Escalera de gasto.</td></tr>
+    <tr><td>Quiere prioridad.</td><td>Control premium.</td><td>Agenda limitada.</td></tr>
+    <tr><td>Vuelve después de comprar.</td><td>LTV alto.</td><td>Continuidad personalizada.</td></tr>
+  </tbody></table></div>
+  <div class="scriptCard" data-tag="whale"><div class="scriptTitle">Reactivación whale dormida <button class="copyBtn" onclick="copyScript(this)">Copiar</button></div>
+    <div class="scriptLine">Hace días no apareces y se me hizo raro.</div>
+    <div class="scriptLine">Vi algo hoy y pensé: esto le gustaría a él.</div>
+    <div class="scriptLine">Contigo no me gusta mandar cosas genéricas.</div>
+    <div class="scriptLine">Si apareces ahora, te guardo algo diferente.</div>
+  </div>
+</section>
+
+<section class="module" id="m15">
+  <h2>15. Objeciones y reencuadres</h2>
+  <p class="objective">No se discute con objeciones. Se reencuadran con valor, escasez, exclusividad o límite.</p>
+  <div class="tableWrap"><table><thead><tr><th>Objeción</th><th>Respuesta exacta</th><th>Palanca</th></tr></thead><tbody>
+    <tr><td>Está caro.</td><td>No es lo que cuesta, es lo que vas a sentir. Y eso no se explica.</td><td>Valor.</td></tr>
+    <tr><td>Después.</td><td>Después no se siente igual; ahora es cuando estoy así.</td><td>Escasez.</td></tr>
+    <tr><td>No tengo dinero.</td><td>Cuando estés listo me buscas. Conmigo esto no es gratis.</td><td>Límite.</td></tr>
+    <tr><td>Muestra primero.</td><td>No regalo lo que otros valoran. Si te atreves, ven.</td><td>Exclusividad.</td></tr>
+    <tr><td>Qué voy a ver?</td><td>Algo que prefiero que vivas, no que te explique.</td><td>Misterio.</td></tr>
+    <tr><td>Con otra pago menos.</td><td>Entonces ve con ella. Cuando quieras algo diferente, aquí estoy.</td><td>Valor propio.</td></tr>
+    <tr><td>No confío.</td><td>No deberías confiar tan fácil... deberías comprobarlo.</td><td>Reto.</td></tr>
+    <tr><td>Solo quiero hablar.</td><td>Hablar me gusta, pero no me provoca quedarme en eso.</td><td>Dirección.</td></tr>
+  </tbody></table></div>
+  <div class="warning">Máximo 2 respuestas a la misma objeción. Si insiste, baja a rojo.</div>
+</section>
+
+<section class="module" id="m16">
+  <h2>16. Palabras prohibidas vs gatillos</h2>
+  <div class="tableWrap"><table><thead><tr><th>Evitar</th><th>Por qué baja ventas</th><th>Reemplazo</th></tr></thead><tbody>
+    <tr><td>Precio</td><td>Activa comparación racional.</td><td>Valor / lo que vas a sentir.</td></tr>
+    <tr><td>Videollamada</td><td>Suena técnico o servicio.</td><td>Vernos en tiempo real / espacio privado.</td></tr>
+    <tr><td>Contenido</td><td>Suena archivo.</td><td>Momento / experiencia / algo para ti.</td></tr>
+    <tr><td>Comprar</td><td>Transacción fría.</td><td>Desbloquear / atreverte / venir.</td></tr>
+    <tr><td>Cliente</td><td>Rompe fantasía.</td><td>Tú / alguien como tú.</td></tr>
+    <tr><td>Catálogo</td><td>Mata misterio.</td><td>Lo que me nace mostrarte.</td></tr>
+  </tbody></table></div>
+</section>
+
+<section class="module" id="m17">
+  <h2>17. Scripts exactos por escenario</h2>
+  <p class="objective">Banco rápido para copiar, adaptar y ejecutar.</p>
+  <div class="grid">
+    <div class="scriptCard" data-tag="hook"><div class="scriptTitle">Aparece después de días <button class="copyBtn" onclick="copyScript(this)">Copiar</button></div><div class="scriptLine">Mira quién volvió... pensé que te había perdido.</div><div class="scriptLine">Te desapareciste justo cuando se ponía interesante.</div></div>
+    <div class="scriptCard" data-tag="script"><div class="scriptTitle">Responde “jaja” <button class="copyBtn" onclick="copyScript(this)">Copiar</button></div><div class="scriptLine">Muy tranquilo estás; esperaba más de ti.</div><div class="scriptLine">Ese jaja no me dice si te atreves.</div></div>
+    <div class="scriptCard" data-tag="objecion"><div class="scriptTitle">Pide algo directo <button class="copyBtn" onclick="copyScript(this)">Copiar</button></div><div class="scriptLine">Te lo puedo mostrar, pero no así de fácil.</div><div class="scriptLine">Primero dime si puedes conmigo.</div></div>
+    <div class="scriptCard" data-tag="rojo objecion"><div class="scriptTitle">Pide gratis <button class="copyBtn" onclick="copyScript(this)">Copiar</button></div><div class="scriptLine">Gratis no me provoca. Si vas en serio, demuéstralo.</div><div class="scriptLine">No regalo lo que otros sí valoran.</div></div>
+    <div class="scriptCard" data-tag="novia"><div class="scriptTitle">Habla emocional <button class="copyBtn" onclick="copyScript(this)">Copiar</button></div><div class="scriptLine">Me gusta que me hables así, pero también quiero sentir que vas en serio.</div><div class="scriptLine">Contigo puedo ser dulce, pero no aburrida.</div></div>
+    <div class="scriptCard" data-tag="whale"><div class="scriptTitle">Compró <button class="copyBtn" onclick="copyScript(this)">Copiar</button></div><div class="scriptLine">Te gustó? Porque eso fue suave.</div><div class="scriptLine">Si te quedas, puedo subirlo.</div></div>
+  </div>
+</section>
+
+<section class="module" id="m18">
+  <h2>18. Automatización mental por tipo de sub</h2>
+  <p class="objective">No es bot. Es ruta mental para responder rápido y coherente.</p>
+  <div class="tableWrap"><table><thead><tr><th>Si el sub...</th><th>Entonces...</th><th>Mensaje base</th></tr></thead><tbody>
+    <tr><td>Responde rápido y caliente.</td><td>Cerrar.</td><td>Ven, esto ya no es para escribir.</td></tr>
+    <tr><td>Pregunta precio.</td><td>Elevar valor y cerrar.</td><td>Primero dime si podrías conmigo.</td></tr>
+    <tr><td>Duda.</td><td>Reto suave.</td><td>Siento que quieres, pero te aguantas.</td></tr>
+    <tr><td>Pide gratis.</td><td>Límite.</td><td>Conmigo no funciona gratis.</td></tr>
+    <tr><td>No responde.</td><td>Cambiar hook.</td><td>No insistir en el mismo hilo.</td></tr>
+    <tr><td>Compra.</td><td>Upsell inmediato.</td><td>Eso fue suave; puedo hacerlo más intenso.</td></tr>
+    <tr><td>Compra 2 veces.</td><td>Marcar whale.</td><td>Contigo voy a hacer una excepción.</td></tr>
+    <tr><td>Se pone emocional.</td><td>Novia virtual con límite.</td><td>Me gusta cómo me hablas, pero sígueme el ritmo.</td></tr>
+  </tbody></table></div>
+</section>
+
+<section class="module" id="m19">
+  <h2>19. KPI y auditoría del chatter</h2>
+  <p class="objective">El chatter no se evalúa por “actividad”, sino por conversión, escalada y recurrencia.</p>
+  <div class="tableWrap"><table><thead><tr><th>KPI</th><th>Fórmula</th><th>Meta sugerida</th><th>Si falla...</th></tr></thead><tbody>
+    <tr><td>Respuesta a MM</td><td>Respuestas / MM enviados</td><td>&gt;15%</td><td>Hooks débiles.</td></tr>
+    <tr><td>Tiempo a primer pago</td><td>Minutos desde primer mensaje a compra</td><td>Bajar sin quemar</td><td>Falta dirección.</td></tr>
+    <tr><td>Conversión amarillo → verde</td><td>Verdes / amarillos</td><td>&gt;30%</td><td>Mala validación.</td></tr>
+    <tr><td>Cierre por verde</td><td>Compras / verdes</td><td>&gt;40%</td><td>No cierra en pico.</td></tr>
+    <tr><td>Upsell rate</td><td>Upsells / compras</td><td>&gt;40%</td><td>No escala.</td></tr>
+    <tr><td>LTV</td><td>Total fan en el tiempo</td><td>Subir semanal</td><td>No deja ganchos.</td></tr>
+    <tr><td>Reactivación</td><td>Fríos recuperados / fríos contactados</td><td>&gt;15%</td><td>MM pobres.</td></tr>
+  </tbody></table></div>
+</section>
+
+<section class="module" id="m20">
+  <h2>20. Rutina diaria del turno</h2>
+  <div class="tableWrap"><table><thead><tr><th>Momento</th><th>Acción</th><th>Objetivo</th></tr></thead><tbody>
+    <tr><td>Inicio</td><td>Leer notas, detectar verdes y whales.</td><td>No perder dinero caliente.</td></tr>
+    <tr><td>Primeros 15 min</td><td>MM de activación.</td><td>Abrir conversaciones.</td></tr>
+    <tr><td>Cada 30 min</td><td>Clasificar semáforo.</td><td>Priorizar mejor.</td></tr>
+    <tr><td>Después de compra</td><td>Upsell inmediato.</td><td>Aumentar ticket.</td></tr>
+    <tr><td>Mitad turno</td><td>MM de tensión/filtro.</td><td>Mover amarillos.</td></tr>
+    <tr><td>Última hora</td><td>Reactivar pendientes calientes.</td><td>Cerrar antes del handoff.</td></tr>
+    <tr><td>Cierre</td><td>Notas: color, deseo, objeción, siguiente paso.</td><td>Continuidad.</td></tr>
+  </tbody></table></div>
+</section>
+
+<section class="module" id="m21">
+  <h2>21. Errores críticos que arruinan ventas</h2>
+  <div class="tableWrap"><table><thead><tr><th>Error</th><th>Daño</th><th>Corrección</th></tr></thead><tbody>
+    <tr><td>Quemar el clímax</td><td>Baja ticket y elimina continuidad.</td><td>Guardar siguiente escalón.</td></tr>
+    <tr><td>Conversar sin dirección</td><td>Atención gratis.</td><td>Cada mensaje con propósito.</td></tr>
+    <tr><td>Ceder frame</td><td>Regateo y exigencias.</td><td>Dar opciones limitadas.</td></tr>
+    <tr><td>Sonar bot</td><td>Rompe ilusión.</td><td>Mensajes cortos y contextuales.</td></tr>
+    <tr><td>Discutir precio</td><td>Baja valor.</td><td>Reencuadrar.</td></tr>
+    <tr><td>Bajar precio primero</td><td>Entrena al fan a regatear.</td><td>Anclar valor antes.</td></tr>
+    <tr><td>No dejar gancho</td><td>Baja LTV.</td><td>Siempre una puerta futura.</td></tr>
+    <tr><td>Sobreventa agresiva</td><td>Rechazo.</td><td>Progresión natural.</td></tr>
+  </tbody></table></div>
+</section>
+
+<section class="module exam" id="m22">
+  <h2>22. Simulaciones reales tipo academia</h2>
+  <p class="objective">Usar estas simulaciones en rol play. El chatter debe clasificar, responder y justificar cuándo cerraría.</p>
+  <div class="example"><b>Simulación 1 · Fan frío</b>
+    <div class="bubble"><span>Chatter:</span> Mor... me acordé de algo que dejamos pendiente.</div>
+    <div class="bubble"><span>Fan:</span> jaja</div>
+    <div class="bubble"><span>Respuesta elite:</span> Muy tranquilo estás... esperaba más de ti.</div>
+    <div class="bubble"><span>Siguiente:</span> Me equivoqué contigo o me vas a sorprender?</div>
+  </div>
+  <div class="example"><b>Simulación 2 · Fan verde</b>
+    <div class="bubble"><span>Chatter:</span> Esto sería mejor si me vieras ahora.</div>
+    <div class="bubble"><span>Fan:</span> Quiero verte.</div>
+    <div class="bubble"><span>Respuesta elite:</span> Entonces ven, no quiero que esto se enfríe.</div>
+    <div class="bubble"><span>Siguiente:</span> Cerrar. No seguir calentando.</div>
+  </div>
+  <div class="example"><b>Simulación 3 · Objeción precio</b>
+    <div class="bubble"><span>Fan:</span> Cuánto cuesta?</div>
+    <div class="bubble"><span>Respuesta elite:</span> Primero dime si podrías conmigo... esto no es para cualquiera.</div>
+    <div class="bubble"><span>Siguiente:</span> Elevar valor y dar acción concreta.</div>
+  </div>
+  <div class="example"><b>Simulación 4 · Novia virtual</b>
+    <div class="bubble"><span>Fan:</span> Extrañaba hablar contigo.</div>
+    <div class="bubble"><span>Respuesta elite:</span> Me gusta que me digas eso... pero no quiero que solo me extrañes, quiero que vengas por mí.</div>
+    <div class="bubble"><span>Siguiente:</span> Tensión suave + monetización natural.</div>
+  </div>
+  <div class="example"><b>Simulación 5 · Whale dormida</b>
+    <div class="bubble"><span>Chatter:</span> Hace días no apareces y se me hizo raro.</div>
+    <div class="bubble"><span>Fan:</span> He estado ocupado.</div>
+    <div class="bubble"><span>Respuesta elite:</span> Lo sé... pero contigo me gusta cuando vuelves con ganas.</div>
+    <div class="bubble"><span>Siguiente:</span> Ofrecer espacio VIP limitado.</div>
+  </div>
+</section>
+
+<section class="module exam" id="m23">
+  <h2>23. Quiz interactivo de certificación</h2>
+  <p class="objective">Presiona respuestas para evaluar al chatter. Meta sugerida: 80%.</p>
+  <div id="quiz"></div>
+  <button class="btn gold" onclick="resetQuiz()">Reiniciar quiz</button>
+</section>
+
+<section class="module" id="m24">
+  <h2>24. Seguridad, límites y buenas prácticas</h2>
+  <p class="objective">La operación debe proteger cuenta, modelo, chatter y plataforma.</p>
+  <ul>
+    <li>Trabajar solo con adultos. Si alguien dice o sugiere ser menor: cortar y reportar.</li>
+    <li>No compartir ubicación, redes personales, datos legales o contacto externo.</li>
+    <li>No aceptar pagos fuera de los canales aprobados por la operación.</li>
+    <li>No prometer relación real, exclusividad absoluta ni disponibilidad 24/7.</li>
+    <li>No tolerar acoso, amenazas, grabaciones no permitidas o exigencias fuera de límites.</li>
+    <li>No enviar material antes de pago cuando corresponda.</li>
+  </ul>
+  <div class="tableWrap"><table><thead><tr><th>Situación</th><th>Respuesta</th></tr></thead><tbody>
+    <tr><td>Quiere grabar</td><td>Si veo que grabas, corto al instante. No es negociable.</td></tr>
+    <tr><td>Insulta</td><td>Hablamos cuando respetes.</td></tr>
+    <tr><td>Quiere gratis</td><td>No regalo lo que otros sí valoran.</td></tr>
+    <tr><td>Dice ser menor</td><td>No puedo continuar esta conversación.</td></tr>
+    <tr><td>Pide redes</td><td>Me gusta mantener esto aquí, donde se siente privado y seguro.</td></tr>
+    <tr><td>Pide promesa de relación</td><td>Me gusta esto contigo, pero no vendo mentiras. Vivamos el momento.</td></tr>
+  </tbody></table></div>
+</section>
+
+
+<section class="module" id="m25">
+  <h2>25. Generador automático de hooks por modelo / nicho</h2>
+  <p class="objective">Herramienta interna para crear hooks según nicho de la modelo, tipo de sub, horario, plataforma y objetivo comercial.</p>
+
+  <div class="toolPanel">
+    <div class="formGrid">
+      <div>
+        <label>Nicho / personalidad de la modelo</label>
+        <select id="hookNicho">
+          <option value="novia_dulce">Novia dulce / girlfriend vibe</option>
+          <option value="dominante_sutil">Dominante sutil</option>
+          <option value="timida">Tímida / inocente provocadora</option>
+          <option value="latina_caliente">Latina intensa</option>
+          <option value="premium">Premium / elegante</option>
+          <option value="cosplay">Cosplay / fantasía</option>
+          <option value="fitness">Fitness / cuerpo trabajado</option>
+          <option value="fetiche_suave">Fetiche suave</option>
+          <option value="no_explicita">No explícita / sensualidad sugerida</option>
+        </select>
+      </div>
+      <div>
+        <label>Tipo de sub</label>
+        <select id="hookTipo">
+          <option value="verde">🟢 Verde</option>
+          <option value="amarillo">🟡 Amarillo</option>
+          <option value="frio">❄️ Frío</option>
+          <option value="whale">🐳 Whale</option>
+          <option value="novia">💔 Novia virtual</option>
+          <option value="tactico">🧮 Táctico</option>
+        </select>
+      </div>
+      <div>
+        <label>Horario</label>
+        <select id="hookHorario">
+          <option value="manana">Mañana</option>
+          <option value="tarde">Tarde</option>
+          <option value="noche">Noche</option>
+          <option value="madrugada">Madrugada</option>
+        </select>
+      </div>
+      <div>
+        <label>Objetivo</label>
+        <select id="hookObjetivo">
+          <option value="reactivar">Reactivar</option>
+          <option value="interaccion">Crear interacción</option>
+          <option value="filtrar">Filtrar intención</option>
+          <option value="cierre">Preparar cierre</option>
+          <option value="upsell">Abrir upsell</option>
+        </select>
+      </div>
+    </div>
+    <button class="btn gold" style="margin-top:12px" onclick="generarHooks()">Generar hooks</button>
+    <div id="hookResults" class="resultBox"></div>
+  </div>
+
+  <div class="note"><b>Uso recomendado:</b> generar 5-8 variantes, elegir 2 para el turno y no repetir el mismo hook más de 2 veces por día en la misma cuenta.</div>
+</section>
+
+<section class="module" id="m26">
+  <h2>26. Asistente de respuestas en tiempo real</h2>
+  <p class="objective">Versión offline + conexión opcional con Ollama local real. Analiza tipo de sub, mensaje recibido y objetivo para sugerir respuestas. Si Ollama está activo en http://localhost:11434, puede generar hooks y respuestas con IA local.</p>
+
+  <div class="toolPanel">
+    <div class="formGrid">
+      <div>
+        <label>Tipo de sub</label>
+        <select id="respTipo">
+          <option value="verde">🟢 Verde</option>
+          <option value="amarillo">🟡 Amarillo</option>
+          <option value="rojo">🔴 Rojo</option>
+          <option value="frio">❄️ Frío</option>
+          <option value="whale">🐳 Whale</option>
+          <option value="novia">💔 Novia virtual</option>
+          <option value="tactico">🧮 Táctico</option>
+        </select>
+      </div>
+      <div>
+        <label>Objetivo del chatter</label>
+        <select id="respObjetivo">
+          <option value="validar">Validar intención</option>
+          <option value="escalar">Escalar tensión</option>
+          <option value="cerrar">Cerrar</option>
+          <option value="upsell">Upsell</option>
+          <option value="cortar">Cortar / filtrar</option>
+          <option value="novia">Novia virtual</option>
+        </select>
+      </div>
+    </div>
+    <label style="display:block;margin-top:12px">Mensaje del sub</label>
+    <textarea id="mensajeSub" placeholder="Pega aquí lo que dijo el fan..."></textarea>
+    <button class="btn gold" style="margin-top:12px" onclick="sugerirRespuesta()">Sugerir respuesta</button>
+    <div id="respResults" class="resultBox"></div>
+  </div>
+
+  <div class="warning"><b>Nota:</b> esta versión funciona sin internet ni servidor. No “piensa” como IA real, pero usa reglas comerciales y patrones para dar respuestas rápidas. Si luego quieres IA local real, se conecta a Ollama.</div>
+</section>
+
+<section class="module" id="m27">
+  <h2>27. Dashboard de conversión por tipo de hook</h2>
+  <p class="objective">Registro simple dentro del navegador para medir qué hooks abren conversación, cuáles cierran y cuáles generan upsell.</p>
+
+  <div class="toolPanel">
+    <div class="formGrid">
+      <div><label>Tipo de hook</label>
+        <select id="trackHook">
+          <option value="Curiosidad">Curiosidad</option>
+          <option value="Pendiente">Pendiente</option>
+          <option value="Ego/Reto">Ego/Reto</option>
+          <option value="Novia virtual">Novia virtual</option>
+          <option value="Whale VIP">Whale VIP</option>
+          <option value="Escasez">Escasez</option>
+          <option value="Cierre">Cierre</option>
+        </select>
+      </div>
+      <div><label>Enviados</label><input id="trackSent" class="input" type="number" min="0" value="10"></div>
+      <div><label>Respuestas</label><input id="trackReplies" class="input" type="number" min="0" value="0"></div>
+      <div><label>Cierres</label><input id="trackCloses" class="input" type="number" min="0" value="0"></div>
+      <div><label>Upsells</label><input id="trackUpsells" class="input" type="number" min="0" value="0"></div>
+    </div>
+    <button class="btn gold" style="margin-top:12px" onclick="guardarTracking()">Guardar registro</button>
+    <button class="btn" style="margin-top:12px" onclick="borrarTracking()">Borrar tracking</button>
+    <div id="trackingDashboard"></div>
+  </div>
+</section>
+
+<section class="module" id="m28">
+  <h2>28. Sistema de entrenamiento por niveles</h2>
+  <p class="objective">Ruta de certificación interna para chatters: desde principiante hasta closer elite.</p>
+
+  <div class="grid">
+    <div class="card levelCard"><h4>Nivel 1 · Operador base</h4><p>Domina semáforo, no pierde tiempo en rojos y usa hooks simples.</p><span class="badge">Meta: 80% quiz base</span></div>
+    <div class="card levelCard"><h4>Nivel 2 · Chatter comercial</h4><p>Valida intención, sube amarillos a verdes y maneja objeciones sin discutir.</p><span class="badge">Meta: 30% conversión 🟡→🟢</span></div>
+    <div class="card levelCard"><h4>Nivel 3 · Closer</h4><p>Cierra en pico emocional, usa escasez y aplica upsell inmediato.</p><span class="badge">Meta: 40% cierre en verdes</span></div>
+    <div class="card levelCard"><h4>Nivel 4 · Farmer de whales</h4><p>Detecta VIP, crea recurrencia y aumenta LTV semanal.</p><span class="badge">Meta: 50% recurrencia VIP</span></div>
+    <div class="card levelCard"><h4>Nivel 5 · Elite Laguna</h4><p>Puede entrenar a otros, auditar conversaciones y crear scripts por modelo.</p><span class="badge">Meta: aprobar rol play TL</span></div>
+  </div>
+
+  <h3>Checklist de ascenso</h3>
+  <div class="tableWrap"><table><thead><tr><th>Nivel</th><th>Debe demostrar</th><th>Prueba</th></tr></thead><tbody>
+    <tr><td>1</td><td>Clasificar 20 conversaciones por semáforo.</td><td>90% correctas.</td></tr>
+    <tr><td>2</td><td>Responder 10 objeciones sin bajar valor.</td><td>Sin justificar precio.</td></tr>
+    <tr><td>3</td><td>Hacer 5 cierres simulados.</td><td>Cerrar en el pico.</td></tr>
+    <tr><td>4</td><td>Crear plan de seguimiento para 3 whales.</td><td>Con agenda y ganchos.</td></tr>
+    <tr><td>5</td><td>Auditar 5 chats reales y corregirlos.</td><td>Reporte TL aprobado.</td></tr>
+  </tbody></table></div>
+</section>
+
+
+<section class="module" id="mKPI">
+  <h2>Panel KPI del chatter</h2>
+  <p class="objective">Registro diario por chatter, modelo y turno. Esto queda guardado en el navegador y sirve para medir gestión real, no opiniones.</p>
+  <div class="toolPanel">
+    <div class="formGrid">
+      <div><label>Chatter</label><input class="input" id="kChatter" placeholder="Nombre del chatter"></div>
+      <div><label>Modelo / Cuenta</label><input class="input" id="kModelo" placeholder="MNxx - Nombre"></div>
+      <div><label>Turno</label><select id="kTurno"><option>Mañana</option><option>Tarde</option><option>Noche</option></select></div>
+      <div><label>MM enviados</label><input class="input" type="number" id="kSent" value="0"></div>
+      <div><label>Respuestas</label><input class="input" type="number" id="kReplies" value="0"></div>
+      <div><label>Amarillos trabajados</label><input class="input" type="number" id="kYellow" value="0"></div>
+      <div><label>Verdes generados</label><input class="input" type="number" id="kGreen" value="0"></div>
+      <div><label>Cierres</label><input class="input" type="number" id="kCloses" value="0"></div>
+      <div><label>Upsells</label><input class="input" type="number" id="kUpsells" value="0"></div>
+      <div><label>Whales activas</label><input class="input" type="number" id="kWhales" value="0"></div>
+      <div><label>Ventas $</label><input class="input" type="number" id="kSales" value="0" step="0.01"></div>
+    </div>
+    <button class="btn gold" onclick="saveKPI()">Guardar KPI del turno</button>
+    <button class="btn" onclick="exportLagunaData()">Exportar data</button>
+    <div id="kpiResult" class="resultBox"></div>
+  </div>
+  <div id="kpiHistory"></div>
+</section>
+
+<section class="module" id="mNotes">
+  <h2>Notas del turno / Handoff operativo</h2>
+  <p class="objective">Para no perder ventas entre turnos: dejar color del sub, objeción, deseo, próximo paso y si es potencial whale.</p>
+  <div class="toolPanel">
+    <div class="formGrid">
+      <div><label>Modelo</label><input class="input" id="noteModel" placeholder="MNxx - Nombre"></div>
+      <div><label>Chatter</label><input class="input" id="noteChatter" placeholder="Nombre"></div>
+      <div><label>Turno</label><select id="noteTurno"><option>Mañana</option><option>Tarde</option><option>Noche</option></select></div>
+      <div><label>Estado</label><select id="noteStatus"><option>Operativo</option><option>En riesgo</option><option>Crítico</option><option>Whale potencial</option></select></div>
+    </div>
+    <label>Nota</label>
+    <textarea id="noteText" placeholder="Ej: Fan quedó caliente; objeción precio; responder con escasez; potencial whale si compra segunda vez."></textarea>
+    <button class="btn gold" onclick="saveNote()">Guardar nota</button>
+    <div id="noteHistory"></div>
+  </div>
+</section>
+
+<div class="footer"><b>Academia Laguna Studios</b> · Dashboard FULL PRO · Creado por <b>Roberth & Karelys</b></div>
+
+</main>
+</div>
+
+<script>
+const modules=[...document.querySelectorAll('.module')];
+const navLinks=[...document.querySelectorAll('nav a')];
+const search=document.getElementById('search');
+const progressFill=document.getElementById('progressFill');
+const progressLabel=document.getElementById('progressLabel');
+
+function copyScript(btn){
+  const card=btn.closest('.scriptCard');
+  const lines=[...card.querySelectorAll('.scriptLine')].map(x=>x.textContent.trim()).join('\\n');
+  navigator.clipboard.writeText(lines).then(()=>{
+    const old=btn.textContent; btn.textContent='Copiado'; setTimeout(()=>btn.textContent=old,900);
+  }).catch(()=>{
+    const t=document.createElement('textarea');t.value=lines;document.body.appendChild(t);t.select();document.execCommand('copy');t.remove();
+    const old=btn.textContent; btn.textContent='Copiado'; setTimeout(()=>btn.textContent=old,900);
+  });
+}
+function filterCards(tag,btn){
+  document.querySelectorAll('.chips button').forEach(b=>b.classList.remove('active'));
+  if(btn)btn.classList.add('active');
+  document.querySelectorAll('.scriptCard').forEach(c=>{
+    c.classList.toggle('hidden', tag && !(c.dataset.tag||'').includes(tag));
+  });
+}
+function showTab(id,btn){
+  const parent=btn.closest('.module');
+  parent.querySelectorAll('.tabBtn').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  parent.querySelectorAll('.tabPanel').forEach(p=>p.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+}
+function expandAll(){
+  document.querySelectorAll('.hidden').forEach(x=>x.classList.remove('hidden'));
+  search.value='';
+  modules.forEach(m=>m.style.display='');
+}
+search.addEventListener('input',()=>{
+  const q=search.value.toLowerCase().trim();
+  modules.forEach(m=>{
+    m.style.display = !q || m.innerText.toLowerCase().includes(q) ? '' : 'none';
+  });
+});
+function updateProgress(){
+  const doc=document.documentElement;
+  const max=doc.scrollHeight-window.innerHeight;
+  const pct=max>0?Math.min(100,Math.round((window.scrollY/max)*100)):0;
+  progressFill.style.width=pct+'%';
+  progressLabel.textContent=pct+'%';
+  let current='';
+  modules.forEach(m=>{
+    if(m.getBoundingClientRect().top<140)current=m.id;
+  });
+  navLinks.forEach(a=>a.classList.toggle('active',a.getAttribute('href')==='#'+current));
+}
+window.addEventListener('scroll',updateProgress); updateProgress();
+
+const quizData=[
+  {q:'Un fan responde “quiero verte”. ¿Qué haces?',a:['Sigues calentando 10 mensajes','Cierras inmediatamente','Le mandas algo gratis'],c:1},
+  {q:'Un sub pide gratis desde el inicio. ¿Qué color es?',a:['Verde','Amarillo','Rojo'],c:2},
+  {q:'Después de una compra, el siguiente paso correcto es:',a:['Despedirse','Upsell inmediato','Cambiar de tema'],c:1},
+  {q:'Un fan pregunta precio muy temprano. ¿Qué haces primero?',a:['Suelta precio directo','Elevas valor percibido','Lo ignoras'],c:1},
+  {q:'Compra 2 veces seguidas sin regatear. ¿Qué etiqueta recibe?',a:['Timewaster','Whale potencial','Frío'],c:1},
+  {q:'¿Qué palabra conviene reemplazar “videollamada”?',a:['Vernos en tiempo real','Servicio','Tarifa'],c:0},
+  {q:'Máximo de intercambios con un amarillo antes de decidir:',a:['4','20','Sin límite'],c:0},
+  {q:'Si el fan dice ser menor:',a:['Se sigue suave','Se corta y reporta','Se le vende menos'],c:1}
+];
+let quizState={answered:0,correct:0};
+function renderQuiz(){
+  const box=document.getElementById('quiz');
+  box.innerHTML='';
+  quizState={answered:0,correct:0};
+  quizData.forEach((item,idx)=>{
+    const q=document.createElement('div');q.className='quizBox';
+    q.innerHTML='<div class="quizQ">'+(idx+1)+'. '+item.q+'</div>';
+    const opts=document.createElement('div');opts.className='quizOptions';
+    item.a.forEach((ans,i)=>{
+      const b=document.createElement('button');b.textContent=ans;
+      b.onclick=()=>{
+        if(b.parentElement.dataset.done)return;
+        b.parentElement.dataset.done='1';
+        quizState.answered++;
+        if(i===item.c){b.classList.add('correct');quizState.correct++;}
+        else{b.classList.add('wrong');opts.children[item.c].classList.add('correct');}
+        updateQuizResult();
+      };
+      opts.appendChild(b);
+    });
+    q.appendChild(opts);box.appendChild(q);
+  });
+  const res=document.createElement('div');res.id='quizResult';res.className='quizResult';res.textContent='Resultado: 0/0';box.appendChild(res);
+}
+function updateQuizResult(){
+  const res=document.getElementById('quizResult');
+  const pct=quizState.answered?Math.round((quizState.correct/quizState.answered)*100):0;
+  res.textContent='Resultado: '+quizState.correct+'/'+quizState.answered+' · '+pct+'%';
+}
+function resetQuiz(){renderQuiz();}
+renderQuiz();
+
+const hookData={
+  novia_dulce:["Me acordé de ti y me dio una sonrisa tonta.","Hoy me provocó hablarte suave, pero no sé si te lo mereces.","Hay algo en ti que me baja la guardia.","Si apareces ahora, te regalo un pedacito de mi mood."],
+  dominante_sutil:["Me gusta cuando intentas mandar, pero conmigo tienes que ganártelo.","No sé si podrías seguirme el ritmo hoy.","Te dejaría escoger… pero yo decido cómo termina.","Si vas a retarme, hazlo bien."],
+  timida:["No sé por qué me da pena decirte esto…","Me quedé pensando algo y no sé si contártelo.","Creo que contigo me atrevería un poco más.","No me mires así que me pones nerviosa."],
+  latina_caliente:["Apareciste en mi cabeza y ahora tengo una energía peligrosa.","Si vienes ahora, no prometo portarme bien.","Hoy estoy demasiado intensa para ignorarte.","Me provocaste sin hacer nada."],
+  premium:["No suelo abrir este tipo de espacio con cualquiera.","Tengo algo reservado, pero no para curiosos.","Si vas a entrar conmigo, que sea bien.","Lo exclusivo no se explica, se vive."],
+  cosplay:["Hoy tengo un personaje en mente y creo que tú podrías dañarme el guion.","No sé si estás listo para esta versión de mí.","Adivina qué mood tengo hoy.","Si eliges bien, te dejo entrar en mi fantasía."],
+  fitness:["Después de entrenar quedé con una energía que no sé dónde poner.","Hoy mi cuerpo está pidiendo atención.","No deberías verme en este mood post-workout.","Si apareces ahora, te dejo escoger qué parte mirar primero."],
+  fetiche_suave:["Me acordé de ese detalle raro que te gusta.","No todos entienden esto… por eso pensé en ti.","Tengo algo pequeño que podría provocarte mucho.","Si sabes pedirlo bien, puede que te siga el juego."],
+  no_explicita:["No necesito mostrar demasiado para dejarte pensando.","A veces lo que no ves provoca más.","Tengo un mood suave, pero peligroso.","Si entiendes la tensión, vas a querer quedarte."]
+};
+const tipoPhrases={
+  verde:["Esto ya no es para escribir.","Ven antes de que se enfríe.","Si sigues así, lo subo de nivel."],
+  amarillo:["Siento que quieres, pero te frenas.","Dime si vas en serio o solo miras.","Convénceme un poco."],
+  frio:["Pensé que eras diferente.","Te me desapareciste justo cuando se ponía interesante.","No sé si escribirte fue buena idea."],
+  whale:["Contigo no mando cosas genéricas.","Te guardé algo distinto.","Si apareces ahora, te doy prioridad."],
+  novia:["Hoy me hiciste falta.","Me gusta cuando apareces así.","Siento que contigo se me cambia el mood."],
+  tactico:["No lo pienses como precio, piénsalo como experiencia.","Esto no es para cualquiera.","Tienes dos caminos: suave o privado."]
+};
+const horarioPhrases={
+  manana:["Buenos días… desperté con una idea contigo.","No deberías ser lo primero que pienso.","Hoy amanecí con un mood raro."],
+  tarde:["Estoy en una energía peligrosa ahora.","Me estoy aburriendo… y eso contigo podría cambiar.","No sé si debería escribirte, pero lo hice."],
+  noche:["A esta hora me pongo peligrosa.","No deberías aparecer cuando estoy así.","Si te quedas ahora, pasan cosas."],
+  madrugada:["No puedo dormir y pensé en ti.","A esta hora solo pienso cosas que no debería.","Si estás despierto, ven."]
+};
+const objetivoPhrases={
+  reactivar:["me acordé de lo pendiente.","te me desapareciste.","no sé si sigues siendo igual de interesante."],
+  interaccion:["dime qué harías.","respóndeme algo que me provoque.","quiero ver si sabes seguirme."],
+  filtrar:["vas en serio o solo miras?","te atreves o te vas?","me vas a sorprender?"],
+  cierre:["ven ahora.","no lo dejes enfriar.","si entras, es ahora."],
+  upsell:["eso fue suave.","puedo subirlo más.","lo siguiente sí es otro nivel."]
+};
+function generarHooks(){
+  const n=document.getElementById('hookNicho').value;
+  const t=document.getElementById('hookTipo').value;
+  const h=document.getElementById('hookHorario').value;
+  const o=document.getElementById('hookObjetivo').value;
+  const base=[...(hookData[n]||[]),...(tipoPhrases[t]||[]),...(horarioPhrases[h]||[]),...(objetivoPhrases[o]||[])];
+  const combos=[
+    `${base[0]} ${base[7]||''}`.trim(),
+    `${base[4]||base[1]} ${base[10]||''}`.trim(),
+    `${base[8]||base[2]} ${base[11]||''}`.trim(),
+    `${base[3]} ${base[5]||''}`.trim(),
+    `${base[6]||base[0]} ${base[12]||''}`.trim(),
+    `${base[9]||base[1]} ${base[13]||''}`.trim(),
+    `${base[2]} ${base[14]||''}`.trim(),
+    `${base[1]} ${base[15]||''}`.trim()
+  ].filter(Boolean);
+  document.getElementById('hookResults').innerHTML='<b>Hooks generados:</b>'+combos.map(x=>`<div class="resultItem">${x}<button class="copyBtn" onclick="navigator.clipboard.writeText('${x.replace(/'/g,"\\'")}')">Copiar</button></div>`).join('');
+}
+function sugerirRespuesta(){
+  const tipo=document.getElementById('respTipo').value;
+  const obj=document.getElementById('respObjetivo').value;
+  const msg=(document.getElementById('mensajeSub').value||'').toLowerCase();
+  let detected='general';
+  if(msg.includes('precio')||msg.includes('cuanto')||msg.includes('cuánto')||msg.includes('cost'))detected='precio';
+  if(msg.includes('gratis')||msg.includes('free'))detected='gratis';
+  if(msg.includes('despues')||msg.includes('después')||msg.includes('later'))detected='despues';
+  if(msg.includes('ver')||msg.includes('show')||msg.includes('see'))detected='ver';
+  const bank={
+    precio:["Primero dime si podrías conmigo… esto no es para cualquiera.","No lo pienses como precio, piensa en lo que vas a vivir conmigo.","Te dejo dos caminos: algo suave primero o algo más privado ahora."],
+    gratis:["Jajaja conmigo no funciona gratis.","No regalo lo que otros sí valoran.","Si vas en serio, me lo demuestras."],
+    despues:["Después no se siente igual.","Ahora es cuando estoy así.","Si lo dejas pasar, no te prometo este mismo mood."],
+    ver:["Entonces ven, esto ya no es para escribir.","Quiero que lo vivas, no que lo imagines.","Si me quieres ver así, entra ahora."],
+    general:["Dime la verdad… vas en serio o solo estás mirando?","Siento que quieres, pero te estás aguantando.","Me equivoqué contigo o me vas a sorprender?"]
+  };
+  let extras={
+    verde:"Clasificación: 🟢 Verde. Acción recomendada: cerrar ya, sin seguir calentando.",
+    amarillo:"Clasificación: 🟡 Amarillo. Acción recomendada: validar intención en máximo 4 intercambios.",
+    rojo:"Clasificación: 🔴 Rojo. Acción recomendada: límite y salida.",
+    frio:"Clasificación: ❄️ Frío. Acción recomendada: reactivar con curiosidad, no vender directo.",
+    whale:"Clasificación: 🐳 Whale. Acción recomendada: trato VIP, exclusividad y continuidad.",
+    novia:"Clasificación: 💔 Novia virtual. Acción recomendada: memoria + ternura + límite.",
+    tactico:"Clasificación: 🧮 Táctico. Acción recomendada: reencuadrar valor antes de precio."
+  };
+  const suggestions=bank[detected]||bank.general;
+  document.getElementById('respResults').innerHTML=`<div class="note">${extras[tipo]}</div><b>Respuestas sugeridas:</b>`+suggestions.map(x=>`<div class="resultItem">${x}<button class="copyBtn" onclick="navigator.clipboard.writeText('${x.replace(/'/g,"\\'")}')">Copiar</button></div>`).join('');
+}
+function getTracking(){try{return JSON.parse(localStorage.getItem('lagunaTracking')||'[]')}catch(e){return[]}}
+function setTracking(data){localStorage.setItem('lagunaTracking',JSON.stringify(data));renderTracking();}
+function guardarTracking(){
+  const rec={hook:trackHook.value,sent:+trackSent.value||0,replies:+trackReplies.value||0,closes:+trackCloses.value||0,upsells:+trackUpsells.value||0,date:new Date().toLocaleDateString()};
+  const data=getTracking();data.push(rec);setTracking(data);
+}
+function borrarTracking(){if(confirm('Borrar tracking local?'))setTracking([]);}
+function renderTracking(){
+  const data=getTracking();
+  let sent=0,replies=0,closes=0,upsells=0;
+  data.forEach(r=>{sent+=r.sent;replies+=r.replies;closes+=r.closes;upsells+=r.upsells;});
+  const resp=sent?Math.round(replies/sent*100):0;
+  const close=replies?Math.round(closes/replies*100):0;
+  const up=closes?Math.round(upsells/closes*100):0;
+  let by={};data.forEach(r=>{by[r.hook]=by[r.hook]||{sent:0,replies:0,closes:0,upsells:0};by[r.hook].sent+=r.sent;by[r.hook].replies+=r.replies;by[r.hook].closes+=r.closes;by[r.hook].upsells+=r.upsells;});
+  trackingDashboard.innerHTML=`
+    <div class="metricCards">
+      <div class="metricCard"><div class="metricNum">${resp}%</div><div>Respuesta MM</div></div>
+      <div class="metricCard"><div class="metricNum">${close}%</div><div>Cierre sobre respuestas</div></div>
+      <div class="metricCard"><div class="metricNum">${up}%</div><div>Upsell sobre cierres</div></div>
+      <div class="metricCard"><div class="metricNum">${data.length}</div><div>Registros</div></div>
+    </div>
+    <div class="tableWrap"><table><thead><tr><th>Hook</th><th>Enviados</th><th>Respuestas</th><th>Cierres</th><th>Upsells</th><th>Resp%</th></tr></thead><tbody>
+    ${Object.entries(by).map(([k,r])=>`<tr><td>${k}</td><td>${r.sent}</td><td>${r.replies}</td><td>${r.closes}</td><td>${r.upsells}</td><td>${r.sent?Math.round(r.replies/r.sent*100):0}%</td></tr>`).join('')}
+    </tbody></table></div>`;
+}
+renderTracking();
+
+
+function lagunaGet(k){try{return JSON.parse(localStorage.getItem(k)||'[]')}catch(e){return[]}}
+function lagunaSet(k,v){localStorage.setItem(k,JSON.stringify(v))}
+function saveKPI(){
+  const r={
+    date:new Date().toLocaleString(),
+    chatter:document.getElementById('kChatter')?.value||'',
+    modelo:document.getElementById('kModelo')?.value||'',
+    turno:document.getElementById('kTurno')?.value||'',
+    sent:+(document.getElementById('kSent')?.value||0),
+    replies:+(document.getElementById('kReplies')?.value||0),
+    yellow:+(document.getElementById('kYellow')?.value||0),
+    green:+(document.getElementById('kGreen')?.value||0),
+    closes:+(document.getElementById('kCloses')?.value||0),
+    upsells:+(document.getElementById('kUpsells')?.value||0),
+    whales:+(document.getElementById('kWhales')?.value||0),
+    sales:+(document.getElementById('kSales')?.value||0)
+  };
+  const d=lagunaGet('laguna_kpi'); d.push(r); lagunaSet('laguna_kpi',d); renderLagunaKPI();
+  const box=document.getElementById('kpiResult'); if(box) box.innerHTML='<span class="statusPill ok">KPI guardado correctamente</span>';
+}
+function renderLagunaKPI(){
+  const d=lagunaGet('laguna_kpi'); const box=document.getElementById('kpiHistory'); if(!box)return;
+  let sent=0,rep=0,yel=0,green=0,cl=0,up=0,wh=0,sales=0;
+  d.forEach(r=>{sent+=r.sent;rep+=r.replies;yel+=r.yellow;green+=r.green;cl+=r.closes;up+=r.upsells;wh+=r.whales;sales+=r.sales});
+  box.innerHTML=`<div class="metricCards">
+  <div class="metricCard"><div class="metricNum">${sent?Math.round(rep/sent*100):0}%</div><div>Respuesta MM</div></div>
+  <div class="metricCard"><div class="metricNum">${yel?Math.round(green/yel*100):0}%</div><div>Conversión amarillo → verde</div></div>
+  <div class="metricCard"><div class="metricNum">${green?Math.round(cl/green*100):0}%</div><div>Cierre sobre verdes</div></div>
+  <div class="metricCard"><div class="metricNum">${cl?Math.round(up/cl*100):0}%</div><div>Upsell rate</div></div>
+  <div class="metricCard"><div class="metricNum">${wh}</div><div>Whales activas</div></div>
+  <div class="metricCard"><div class="metricNum">$${sales.toFixed(2)}</div><div>Ventas registradas</div></div>
+  </div>
+  <div class="tableWrap"><table><thead><tr><th>Fecha</th><th>Chatter</th><th>Modelo</th><th>Turno</th><th>MM</th><th>Resp</th><th>Cierres</th><th>Upsells</th><th>$</th></tr></thead><tbody>${d.slice(-20).reverse().map(r=>`<tr><td>${r.date}</td><td>${r.chatter}</td><td>${r.modelo}</td><td>${r.turno}</td><td>${r.sent}</td><td>${r.replies}</td><td>${r.closes}</td><td>${r.upsells}</td><td>${r.sales}</td></tr>`).join('')}</tbody></table></div>`;
+}
+function saveNote(){
+  const r={date:new Date().toLocaleString(),model:document.getElementById('noteModel')?.value||'',chatter:document.getElementById('noteChatter')?.value||'',turno:document.getElementById('noteTurno')?.value||'',status:document.getElementById('noteStatus')?.value||'',text:document.getElementById('noteText')?.value||''};
+  const d=lagunaGet('laguna_notes');d.push(r);lagunaSet('laguna_notes',d);renderLagunaNotes(); const t=document.getElementById('noteText'); if(t)t.value='';
+}
+function renderLagunaNotes(){
+  const d=lagunaGet('laguna_notes'); const box=document.getElementById('noteHistory'); if(!box)return;
+  box.innerHTML='<div class="tableWrap"><table><thead><tr><th>Fecha</th><th>Modelo</th><th>Chatter</th><th>Turno</th><th>Estado</th><th>Nota</th></tr></thead><tbody>'+d.slice(-30).reverse().map(r=>`<tr><td>${r.date}</td><td>${r.model}</td><td>${r.chatter}</td><td>${r.turno}</td><td>${r.status}</td><td>${r.text}</td></tr>`).join('')+'</tbody></table></div>';
+}
+function exportLagunaData(){
+  const data={kpi:lagunaGet('laguna_kpi'),notes:lagunaGet('laguna_notes'),tracking:lagunaGet('lagunaTracking')};
+  const blob=new Blob([JSON.stringify(data,null,2)],{type:'application/json'});
+  const a=document.createElement('a'); a.href=URL.createObjectURL(blob); a.download='laguna_studios_academia_data.json'; a.click(); URL.revokeObjectURL(a.href);
+}
+window.addEventListener('load',()=>{renderLagunaKPI();renderLagunaNotes();});
+
+</script>
+</body>
+</html>
