@@ -70,7 +70,7 @@
     </div>
     <div class="card">
       <h3>UNIT 2</h3>
-      <div class="kpi">2692,19</div>
+      <div class="kpi">4423,99</div>
       <div class="small">MD 11 - 20</div>
     </div>
     <div class="card">
@@ -90,7 +90,7 @@
     </div>
     <div class="card">
       <h3>Total General</h3>
-      <div class="kpi">9925,34</div>
+      <div class="kpi">11.657,14</div>
       <div class="small">Suma de todas las units</div>
     </div>
   </section>
@@ -130,10 +130,10 @@
 
 <script>
 const unitLabels = ["UNIT 1","UNIT 2","UNIT 3","UNIT 4","UNIT 5"];
-const unitData = [3923.620000000001,2692.1899999999996,1093.6,887.4399999999999,1160.4400000000003];
+const unitData = [3923.620000000001,4423.99,1093.6,887.4399999999999,1160.4400000000003];
 
 const modelLabels = ["M1","M2","M3","M4","M5","M7","M8","M10","M11","M12","M13","M14","M15","M16","M18","M19","M20","M22","M24","M25","M26","M27","M28","M29","M30","M31","M33","M34","M37","M38","M41","M43","M45","M46","M47","M48","M50","M51","M52","M53","M54"];
-const modelData = [910.9499999999999,989.9300000000001,581.4300000000001,572.23,217.53,9.56,117.36000000000001,524.6300000000001,26.97,294.88,1111.54,514.4399999999999,35.34,44.56,129.62,460.12,74.72,-136.26,342.65,52.69,565.72,45.41,32.71,76.69,113.99,15.450000000000001,151.54,132.21,528.8199999999999,59.42,102.45,916.8200000000002,-68.84,14.58,109.13000000000001,64.53999999999999,21.759999999999998,7.6499999999999995,81.7,19.45,59.25000000000001];
+const modelData = [910.9499999999999,989.9300000000001,581.4300000000001,572.23,217.53,9.56,117.36000000000001,524.6300000000001,26.97,294.88,1111.54,2246.24,35.34,44.56,129.62,460.12,74.72,-136.26,342.65,52.69,565.72,45.41,32.71,76.69,113.99,15.450000000000001,151.54,132.21,528.8199999999999,59.42,102.45,916.8200000000002,-68.84,14.58,109.13000000000001,64.53999999999999,21.759999999999998,7.6499999999999995,81.7,19.45,59.25000000000001];
 
 function formatES(v){return v.toLocaleString('es-ES',{minimumFractionDigits:2,maximumFractionDigits:2});}
 
@@ -185,7 +185,7 @@ new Chart(ctxModel,{
 
 // Generar tabla de modelos
 const tbodyModels = document.getElementById('tbodyModels');
-const modelUnitData = [{"model":"M1","unit":"UNIT 1","profit":910.9499999999999},{"model":"M2","unit":"UNIT 1","profit":989.9300000000001},{"model":"M3","unit":"UNIT 1","profit":581.4300000000001},{"model":"M4","unit":"UNIT 1","profit":572.23},{"model":"M5","unit":"UNIT 1","profit":217.53},{"model":"M7","unit":"UNIT 1","profit":9.56},{"model":"M8","unit":"UNIT 1","profit":117.36000000000001},{"model":"M10","unit":"UNIT 1","profit":524.6300000000001},{"model":"M11","unit":"UNIT 2","profit":26.97},{"model":"M12","unit":"UNIT 2","profit":294.88},{"model":"M13","unit":"UNIT 2","profit":1111.54},{"model":"M14","unit":"UNIT 2","profit":514.4399999999999},{"model":"M15","unit":"UNIT 2","profit":35.34},{"model":"M16","unit":"UNIT 2","profit":44.56},{"model":"M18","unit":"UNIT 2","profit":129.62},{"model":"M19","unit":"UNIT 2","profit":460.12},{"model":"M20","unit":"UNIT 2","profit":74.72},{"model":"M22","unit":"UNIT 3","profit":-136.26},{"model":"M24","unit":"UNIT 3","profit":342.65},{"model":"M25","unit":"UNIT 3","profit":52.69},{"model":"M26","unit":"UNIT 3","profit":565.72},{"model":"M27","unit":"UNIT 3","profit":45.41},{"model":"M28","unit":"UNIT 3","profit":32.71},{"model":"M29","unit":"UNIT 3","profit":76.69},{"model":"M30","unit":"UNIT 3","profit":113.99},{"model":"M31","unit":"UNIT 4","profit":15.450000000000001},{"model":"M33","unit":"UNIT 4","profit":151.54},{"model":"M34","unit":"UNIT 4","profit":132.21},{"model":"M37","unit":"UNIT 4","profit":528.8199999999999},{"model":"M38","unit":"UNIT 4","profit":59.42},{"model":"M41","unit":"UNIT 5","profit":102.45},{"model":"M43","unit":"UNIT 5","profit":916.8200000000002},{"model":"M45","unit":"UNIT 5","profit":-68.84},{"model":"M46","unit":"UNIT 5","profit":14.58},{"model":"M47","unit":"UNIT 5","profit":109.13000000000001},{"model":"M48","unit":"UNIT 5","profit":64.53999999999999},{"model":"M50","unit":"UNIT 5","profit":21.759999999999998},{"model":"M51","unit":"","profit":7.6499999999999995},{"model":"M52","unit":"","profit":81.7},{"model":"M53","unit":"","profit":19.45},{"model":"M54","unit":"","profit":59.25000000000001}];
+const modelUnitData = [{"model":"M1","unit":"UNIT 1","profit":910.9499999999999},{"model":"M2","unit":"UNIT 1","profit":989.9300000000001},{"model":"M3","unit":"UNIT 1","profit":581.4300000000001},{"model":"M4","unit":"UNIT 1","profit":572.23},{"model":"M5","unit":"UNIT 1","profit":217.53},{"model":"M7","unit":"UNIT 1","profit":9.56},{"model":"M8","unit":"UNIT 1","profit":117.36000000000001},{"model":"M10","unit":"UNIT 1","profit":524.6300000000001},{"model":"M11","unit":"UNIT 2","profit":26.97},{"model":"M12","unit":"UNIT 2","profit":294.88},{"model":"M13","unit":"UNIT 2","profit":1111.54},{"model":"M14","unit":"UNIT 2","profit":2246.24},{"model":"M15","unit":"UNIT 2","profit":35.34},{"model":"M16","unit":"UNIT 2","profit":44.56},{"model":"M18","unit":"UNIT 2","profit":129.62},{"model":"M19","unit":"UNIT 2","profit":460.12},{"model":"M20","unit":"UNIT 2","profit":74.72},{"model":"M22","unit":"UNIT 3","profit":-136.26},{"model":"M24","unit":"UNIT 3","profit":342.65},{"model":"M25","unit":"UNIT 3","profit":52.69},{"model":"M26","unit":"UNIT 3","profit":565.72},{"model":"M27","unit":"UNIT 3","profit":45.41},{"model":"M28","unit":"UNIT 3","profit":32.71},{"model":"M29","unit":"UNIT 3","profit":76.69},{"model":"M30","unit":"UNIT 3","profit":113.99},{"model":"M31","unit":"UNIT 4","profit":15.450000000000001},{"model":"M33","unit":"UNIT 4","profit":151.54},{"model":"M34","unit":"UNIT 4","profit":132.21},{"model":"M37","unit":"UNIT 4","profit":528.8199999999999},{"model":"M38","unit":"UNIT 4","profit":59.42},{"model":"M41","unit":"UNIT 5","profit":102.45},{"model":"M43","unit":"UNIT 5","profit":916.8200000000002},{"model":"M45","unit":"UNIT 5","profit":-68.84},{"model":"M46","unit":"UNIT 5","profit":14.58},{"model":"M47","unit":"UNIT 5","profit":109.13000000000001},{"model":"M48","unit":"UNIT 5","profit":64.53999999999999},{"model":"M50","unit":"UNIT 5","profit":21.759999999999998},{"model":"M51","unit":"","profit":7.6499999999999995},{"model":"M52","unit":"","profit":81.7},{"model":"M53","unit":"","profit":19.45},{"model":"M54","unit":"","profit":59.25000000000001}];
 
 modelUnitData.forEach(item => {
   const tr = document.createElement('tr');
